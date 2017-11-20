@@ -413,7 +413,7 @@ view: order_items {
       convert_tz: no
       hidden: yes
     }
-    measure: last_order {
+    measure: latest_order {
       type: date
       sql: MAX(${created_raw});;
       convert_tz: no

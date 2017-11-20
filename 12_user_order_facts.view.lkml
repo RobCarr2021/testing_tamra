@@ -6,14 +6,13 @@ view: user_order_facts {
       column: user_id {}
       column: lifetime_orders {field: order_items.order_count}
       column: lifetime_revenue {field: order_items.total_sale_price}
-      column: order_created {field: order_items.created_raw}
       column: first_order {}
-      column: last_order {}
+      column: latest_order {}
       column: number_of_distinct_months_with_orders {field: order_items.month_count}
     }
-    sortkeys: ["user_id"]
-    distribution: "user_id"
-    sql_trigger_value: SELECT MAX(created_at) FROM order_items ;;
+#     sortkeys: ["user_id"]
+#     distribution: "user_id"
+#     sql_trigger_value: SELECT MAX(created_at) FROM order_items ;;
   }
 
   dimension: user_id {
