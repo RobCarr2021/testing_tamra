@@ -1,5 +1,4 @@
 include: "thelook.model.lkml"
-explore: user_order_facts {}
 view: user_order_facts {
   derived_table: {
     explore_source: order_items {
@@ -10,9 +9,9 @@ view: user_order_facts {
       column: latest_order {}
       column: number_of_distinct_months_with_orders {field: order_items.month_count}
     }
-#     sortkeys: ["user_id"]
-#     distribution: "user_id"
-#     sql_trigger_value: SELECT MAX(created_at) FROM order_items ;;
+    sortkeys: ["user_id"]
+    distribution: "user_id"
+    datagroup_trigger: ecommerce_etl
   }
 
   dimension: user_id {

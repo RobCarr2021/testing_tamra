@@ -1,9 +1,6 @@
 include: "thelook.model.lkml"
 view: order_facts {
   derived_table: {
-    sortkeys: ["order_id"]
-    distribution: "order_id"
-    sql_trigger_value: SELECT MAX(created_at) FROM order_items ;;
     explore_source: order_items {
       column: order_id {}
       column: items_in_order { field: order_items.count }
@@ -15,6 +12,9 @@ view: order_facts {
         sql: RANK() OVER (PARTITION BY user_id ORDER BY created_at) ;;
         }
     }
+    sortkeys: ["order_id"]
+    distribution: "order_id"
+    datagroup_trigger: ecommerce_etl
   }
   dimension: order_id {
     type: number
