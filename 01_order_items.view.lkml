@@ -408,15 +408,13 @@ view: order_items {
     }
 
     measure: first_order {
-      type: date
+      type: date_raw
       sql: MIN(${created_raw});;
-      convert_tz: no
       hidden: yes
     }
     measure: latest_order {
-      type: date
+      type: date_raw
       sql: MAX(${created_raw});;
-      convert_tz: no
       hidden: yes
     }
 
