@@ -1,14 +1,15 @@
-include: "thelook.model.lkml"
 view: user_order_facts {
   derived_table: {
-    explore_source: order_items {
-      column: user_id {}
-      column: lifetime_orders {field: order_items.order_count}
-      column: lifetime_revenue {field: order_items.total_sale_price}
-      column: first_order {}
-      column: latest_order {}
-      column: number_of_distinct_months_with_orders {field: order_items.month_count}
-    }
+    sql: SELECT
+        user_id
+        , COUNT(DISTINCT order_id) AS lifetime_orders
+        , SUM(sale_price) AS lifetime_revenue
+        , MIN(NULLIF(created_at,0)) AS first_order
+        , MAX(NULLIF(created_at,0)) AS latest_order
+        , COUNT(DISTINCT DATE_TRUNC('month', NULLIF(created_at,0))) AS number_of_distinct_months_with_orders
+      FROM order_items
+      GROUP BY user_id
+       ;;
     sortkeys: ["user_id"]
     distribution: "user_id"
     datagroup_trigger: ecommerce_etl

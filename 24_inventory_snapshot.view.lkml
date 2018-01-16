@@ -1,6 +1,6 @@
 view: inventory_snapshot {
   derived_table: {
-    sql_trigger_value: select current_date ;;
+    datagroup_trigger: ecommerce_etl
     sortkeys: ["snapshot_date"]
     distribution: "product_id"
     sql: with calendar as
