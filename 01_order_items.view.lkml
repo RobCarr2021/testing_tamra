@@ -398,25 +398,7 @@ view: order_items {
   }
 
 
-##Aggregations for user_order_facts
-    measure: month_count {
-      ##Used for user_order_facts
-      hidden: yes
-      type: count_distinct
-      drill_fields: [detail*]
-      sql: ${created_month} ;;
-    }
 
-    measure: first_order {
-      type: date_raw
-      sql: MIN(${created_raw});;
-      hidden: yes
-    }
-    measure: latest_order {
-      type: date_raw
-      sql: MAX(${created_raw});;
-      hidden: yes
-    }
 
 ########## Sets ##########
 
