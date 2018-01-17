@@ -1,6 +1,6 @@
 view: affinity {
   derived_table: {
-    sql_trigger_value: SELECT DATE(CONVERT_TIMEZONE('UTC', 'America/Chicago', GETDATE())) ;;
+    datagroup_trigger: ecommerce_etl
     distribution: "product_a_id"
     sortkeys: ["product_a_id", "product_b_id"]
     sql: SELECT
@@ -129,7 +129,7 @@ view: affinity {
 #Table that aggregates the products purchased by user and order id
 view: user_order_product {
   derived_table: {
-    sql_trigger_value: SELECT DATE(CONVERT_TIMEZONE('UTC', 'America/Chicago', GETDATE())) ;;
+    datagroup_trigger: ecommerce_etl
     distribution: "prod_id"
     sortkeys: ["prod_id", "user_id", "order_id"]
     sql: SELECT
@@ -170,7 +170,7 @@ view: user_order_product {
 #Table to count the total times a product id has been purchased
 view: total_order_product {
   derived_table: {
-    sql_trigger_value: SELECT DATE(CONVERT_TIMEZONE('UTC', 'America/Chicago', GETDATE())) ;;
+    datagroup_trigger: ecommerce_etl
     distribution: "prod_id"
     sortkeys: ["prod_id"]
     sql: SELECT

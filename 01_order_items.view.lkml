@@ -33,6 +33,7 @@ view: order_items {
     sql: ${order_id} ;;
   }
 
+
   measure: count_last_28d {
     label: "Count Sold in Trailing 28 Days"
     type: count_distinct
@@ -395,6 +396,9 @@ view: order_items {
     hidden: yes
     sql: ${cohort_values_0} + ${cohort_values_1} ;;
   }
+
+
+
 
 ########## Sets ##########
 

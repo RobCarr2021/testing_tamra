@@ -13,7 +13,7 @@ view: order_facts {
        ;;
     sortkeys: ["order_id"]
     distribution: "order_id"
-    sql_trigger_value: SELECT MAX(created_at) FROM order_items ;;
+    datagroup_trigger: ecommerce_etl
   }
 
   ## DIMENSIONS ##

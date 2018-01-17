@@ -1,6 +1,6 @@
 view: trailing_sales_snapshot {
   derived_table: {
-    sql_trigger_value: select current_date ;;
+    datagroup_trigger: ecommerce_etl
     sortkeys: ["product_id"]
     distribution: "product_id"
     sql: with calendar as

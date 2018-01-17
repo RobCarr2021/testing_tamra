@@ -1,8 +1,5 @@
 view: repeat_purchase_facts {
   derived_table: {
-    sortkeys: ["order_id"]
-    distribution: "order_id"
-    sql_trigger_value: SELECT MAX(created_at) FROM order_items ;;
     sql: SELECT
         order_items.order_id
         , COUNT(DISTINCT repeat_order_items.id) AS number_subsequent_orders
@@ -14,6 +11,9 @@ view: repeat_purchase_facts {
         AND order_items.created_at < repeat_order_items.created_at
       GROUP BY 1
        ;;
+    sortkeys: ["order_id"]
+    distribution: "order_id"
+    datagroup_trigger: ecommerce_etl
   }
 
   dimension: order_id {
