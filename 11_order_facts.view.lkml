@@ -1,23 +1,22 @@
+include: "thelook.model.lkml"
 view: order_facts {
   derived_table: {
-    sql: SELECT
-          order_items.order_id AS order_id
-        , COUNT(*) AS items_in_order
-        , SUM(sale_price) AS order_amount
-        , SUM(inventory_items.cost) AS order_cost
-        , RANK() OVER (PARTITION BY order_items.user_id ORDER BY order_items.created_at) AS order_sequence_number
-      FROM order_items AS order_items
-      LEFT JOIN inventory_items AS inventory_items
-        ON order_items.inventory_item_id = inventory_items.id
-      GROUP BY order_items.order_id, order_items.user_id, order_items.created_at
-       ;;
+    explore_source: order_items {
+      column: order_id {}
+      column: items_in_order { field: order_items.count }
+      column: order_amount { field: order_items.total_sale_price }
+      column: order_cost { field: inventory_items.total_cost }
+      column: user_id {field: order_items.user_id }
+      column: created_at {field: order_items.created_raw}
+      column: order_gross_margin {field: order_items.total_gross_margin}
+      derived_column: order_sequence_number {
+        sql: RANK() OVER (PARTITION BY user_id ORDER BY created_at) ;;
+      }
+    }
     sortkeys: ["order_id"]
     distribution: "order_id"
     datagroup_trigger: ecommerce_etl
   }
-
-  ## DIMENSIONS ##
-
   dimension: order_id {
     type: number
     hidden: yes
@@ -41,6 +40,12 @@ view: order_facts {
     value_format_name: usd
     sql: ${TABLE}.order_cost ;;
   }
+
+  dimension: order_gross_margin {
+    type: number
+    value_format_name: usd
+  }
+
 
   dimension: order_sequence_number {
     type: number
