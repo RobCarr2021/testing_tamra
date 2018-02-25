@@ -61,6 +61,10 @@ view: order_items {
       form_param: {
         name: "Message"
         type: textarea
+        default: "Hey,
+        Could you check out order #{{value}}. It's saying its {{status._value}},
+        but the customer is reaching out to us about it.
+        ~{{ _user_attributes.first_name}}"
       }
 
       form_param: {
