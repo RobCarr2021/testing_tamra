@@ -15,8 +15,8 @@ view: inventory_snapshot {
       ,calendar.snapshot_date
       ,count(*) as number_in_stock
 
-      from inventory_items
-      left join calendar
+      from ecomm.inventory_items
+      left join ecomm.calendar
       on inventory_items.created_at <= calendar.snapshot_date
       and (inventory_items.sold_at >= calendar.snapshot_date OR inventory_items.sold_at is null)
       -- where dateadd('day',90,calendar.snapshot_date)>=current_date

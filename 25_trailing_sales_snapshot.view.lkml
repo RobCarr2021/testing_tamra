@@ -16,9 +16,9 @@ view: trailing_sales_snapshot {
       ,date(order_items.created_at) as snapshot_date
       ,count(*) as trailing_28d_sales
 
-      from order_items
-      left join inventory_items on order_items.inventory_item_id = inventory_items.id
-      left join calendar
+      from ecomm.order_items
+      left join ecomm.inventory_items on order_items.inventory_item_id = inventory_items.id
+      left join ecomm.calendar
       on order_items.created_at <= dateadd('day',28,calendar.snapshot_date)
       and order_items.created_at >= calendar.snapshot_date
       -- where dateadd('day',90,calendar.snapshot_date)>=current_date
