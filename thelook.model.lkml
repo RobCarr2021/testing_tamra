@@ -4,7 +4,7 @@ include: "*.view" # include all the views
 include: "*.dashboard" # include all the dashboards
 
 datagroup: ecommerce_etl {
-  sql_trigger: SELECT max(completed_at) FROM public.etl_jobs ;;
+  sql_trigger: SELECT max(completed_at) FROM ecomm.etl_jobs ;;
   max_cache_age: "24 hours"}
 persist_with: ecommerce_etl
 ############ Base Explores #############
