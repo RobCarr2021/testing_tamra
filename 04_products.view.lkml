@@ -28,7 +28,7 @@ view: products {
     link: {
       label: "Facebook"
       url: "http://www.google.com/search?q=site:facebook.com+{{ value | encode_uri }}+clothes&btnI"
-      icon_url: "https://static.xx.fbcdn.net/rsrc.php/yl/r/H3nktOa7ZMg.ico"
+      icon_url: "https://upload.wikimedia.org/wikipedia/commons/c/c2/F_icon.svg"
     }
 
     link: {
