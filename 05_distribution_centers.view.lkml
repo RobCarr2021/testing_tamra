@@ -6,6 +6,16 @@ view: distribution_centers {
     sql_longitude: ${TABLE}.longitude ;;
   }
 
+  dimension: latitude {
+    sql: ${TABLE}.latitude ;;
+    hidden: yes
+  }
+
+  dimension: longitude {
+    sql: ${TABLE}.longitude ;;
+    hidden: yes
+  }
+
   dimension: id {
     type: number
     primary_key: yes

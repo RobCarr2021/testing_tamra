@@ -125,10 +125,37 @@ view: users {
        ;;
   }
 
+  dimension: latitude {
+    sql: ${TABLE}.latitude ;;
+    hidden: yes
+  }
+
+  dimension: longitude {
+    sql: ${TABLE}.longitude ;;
+    hidden: yes
+  }
+
   dimension: location {
     type: location
     sql_latitude: ${TABLE}.latitude ;;
     sql_longitude: ${TABLE}.longitude ;;
+    link: {
+      label: "Google Directions from Distribution Center"
+      url: "https://www.google.com/maps/dir/'{{ distribution_centers.latitude._value }},{{ distribution_centers.longitude._value }}'/'{{ latitude._value }},{{ longitude._value }}'"
+
+    }
+  }
+
+  dimension: approx_latitude {
+    type: number
+    sql: round(${TABLE}.latitude,1) ;;
+    hidden: yes
+  }
+
+  dimension: approx_longitude {
+    type: number
+    sql: round(${TABLE}.longitude,1) ;;
+    hidden: yes
   }
 
   dimension: approx_location {
@@ -136,6 +163,11 @@ view: users {
     drill_fields: [location]
     sql_latitude: round(${TABLE}.latitude,1) ;;
     sql_longitude: round(${TABLE}.longitude,1) ;;
+    link: {
+      label: "Google Directions from {{ distribution_centers.name._value }}"
+      url: "https://www.google.com/maps/dir/'{{ distribution_centers.latitude._value }},{{ distribution_centers.longitude._value }}'/'{{ approx_latitude._value }},{{ approx_longitude._value }}'"
+      icon_url: "http://www.google.com/s2/favicons?domain=www.google.com"
+    }
   }
 
   ## Other User Information ##
