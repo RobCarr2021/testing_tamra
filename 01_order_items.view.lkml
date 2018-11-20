@@ -172,14 +172,6 @@ view: order_items {
        ;;
   }
 
-  dimension: days_to_process_tiered {
-    description: "This is how many days the order to to process when the status is bla blac"
-    type: tier
-    tiers: [0,1,3,4]
-    style: integer
-    sql: ${days_to_process} ;;
-  }
-
   dimension: shipping_time {
     type: number
     sql: datediff('day',${shipped_raw},${delivered_raw})*1.0 ;;
