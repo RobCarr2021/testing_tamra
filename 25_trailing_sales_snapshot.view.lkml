@@ -1,10 +1,8 @@
 view: trailing_sales_snapshot {
   derived_table: {
     datagroup_trigger: ecommerce_etl
-    sortkeys: ["product_id"]
-    distribution: "product_id"
     sql: with calendar as
-      (select distinct date(created_at) as snapshot_date
+      (select distinct to_date(created_at) as snapshot_date
       from ecomm.inventory_items
       -- where dateadd('day',90,created_at)>=current_date
       )

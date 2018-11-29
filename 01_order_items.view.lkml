@@ -94,14 +94,8 @@ view: order_items {
           name: "general"
           label: "General"
         }
-
       }
-
-
     }
-
-
-
   }
 
   ########## Time Dimensions ##########
@@ -165,7 +159,7 @@ view: order_items {
   dimension: days_to_process {
     type: number
     sql: CASE
-        WHEN ${status} = 'Processing' THEN DATEDIFF('day',${created_raw},GETDATE())*1.0
+        WHEN ${status} = 'Processing' THEN DATEDIFF('day',${created_raw},current_date)*1.0
         WHEN ${status} IN ('Shipped', 'Complete', 'Returned') THEN DATEDIFF('day',${created_raw},${shipped_raw})*1.0
         WHEN ${status} = 'Cancelled' THEN NULL
       END

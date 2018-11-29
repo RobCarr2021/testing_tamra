@@ -11,8 +11,6 @@ view: repeat_purchase_facts {
         AND order_items.created_at < repeat_order_items.created_at
       GROUP BY 1
        ;;
-    sortkeys: ["order_id"]
-    distribution: "order_id"
     datagroup_trigger: ecommerce_etl
   }
 
