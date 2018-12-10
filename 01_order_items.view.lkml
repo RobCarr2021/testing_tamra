@@ -438,6 +438,27 @@ view: order_items {
     drill_fields: [users.traffic_source, user_order_facts.average_lifetime_revenue, user_order_facts.average_lifetime_orders]
   }
 
+  measure: sales_last_90_days {
+    type: sum
+    sql: ${sale_price} ;;
+    filters: {
+      field: created_date
+      value: "90 days"
+    }
+    value_format_name: usd
+  }
+
+    measure: sales_2_months_ago {
+      type: sum
+      sql: ${sale_price} ;;
+      filters: {
+        field: created_date
+        value: "90 days ago for 30 days"
+      }
+      value_format_name: usd
+    }
+
+
 
 
 

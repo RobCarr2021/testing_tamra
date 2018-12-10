@@ -12,6 +12,14 @@ explore: order_items {
   label: "(1) Orders, Items and Users"
   view_name: order_items
 
+
+  always_filter: {
+    filters: {
+      field: created_date
+      value: "7 days"
+    }
+  }
+
   join: order_facts {
     view_label: "Orders"
     relationship: many_to_one
