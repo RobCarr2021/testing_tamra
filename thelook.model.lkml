@@ -6,7 +6,7 @@ include: "*.view" # include all the views
 
 access_grant: sensitive_data {
   user_attribute: can_see_sensitive_data
-  allowed_values: [ "yes"]
+  allowed_values: [ "yes","Yes"]
 }
 
 datagroup: ecommerce_etl {
