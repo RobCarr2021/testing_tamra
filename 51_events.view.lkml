@@ -66,13 +66,13 @@ view: events {
   }
 
   dimension: full_page_url {
-    sql: ${TABLE}.uri ;;
+    sql: ${TABLE}."uri" ;;
   }
 
   dimension: viewed_product_id {
     type: number
     sql: CASE
-        WHEN ${event_type} = 'Product' THEN right(${full_page_url},len(${full_page_url})-9)
+        WHEN ${event_type} = 'Product' THEN right(${full_page_url},length(${full_page_url})-9)
       END
        ;;
   }

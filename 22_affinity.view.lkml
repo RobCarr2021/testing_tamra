@@ -1,8 +1,6 @@
 view: affinity {
   derived_table: {
     datagroup_trigger: ecommerce_etl
-    distribution: "product_a_id"
-    sortkeys: ["product_a_id", "product_b_id"]
     sql: SELECT
         product_a_id
         , product_b_id
@@ -130,16 +128,14 @@ view: affinity {
 view: user_order_product {
   derived_table: {
     datagroup_trigger: ecommerce_etl
-    distribution: "prod_id"
-    sortkeys: ["prod_id", "user_id", "order_id"]
     sql: SELECT
         oi.user_id AS user_id
         , p.id AS prod_id
         , oi.order_id AS order_id
-      FROM order_items oi
-      LEFT JOIN inventory_items ii
+      FROM ecomm.order_items oi
+      LEFT JOIN ecomm.inventory_items ii
         ON oi.inventory_item_id = ii.id
-      LEFT JOIN products p
+      LEFT JOIN ecomm. products p
         ON ii.product_id = p.id
       GROUP BY 1,2,3
        ;;
@@ -171,15 +167,13 @@ view: user_order_product {
 view: total_order_product {
   derived_table: {
     datagroup_trigger: ecommerce_etl
-    distribution: "prod_id"
-    sortkeys: ["prod_id"]
     sql: SELECT
         p.id AS prod_id
         , COUNT(*) AS prod_freq
-      FROM order_items oi
-      LEFT JOIN inventory_items
+      FROM ecomm.order_items oi
+      LEFT JOIN ecomm.inventory_items
         ON oi.inventory_item_id = inventory_items.id
-      LEFT JOIN products p
+      LEFT JOIN ecomm.products p
         ON inventory_items.product_id = p.id
       GROUP BY p.id
        ;;

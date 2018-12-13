@@ -13,8 +13,6 @@ view: order_facts {
         sql: RANK() OVER (PARTITION BY user_id ORDER BY created_at) ;;
       }
     }
-    sortkeys: ["order_id"]
-    distribution: "order_id"
     datagroup_trigger: ecommerce_etl
   }
   dimension: order_id {

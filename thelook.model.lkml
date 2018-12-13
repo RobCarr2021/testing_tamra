@@ -1,4 +1,4 @@
-connection: "demonew_events_ecommerce"
+connection: "snowflake"
 label: "1) eCommerce with Event Data"
 include: "*.view" # include all the views
 
