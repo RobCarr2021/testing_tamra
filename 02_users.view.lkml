@@ -22,8 +22,11 @@ view: users {
   }
 
   dimension: name {
-    required_access_grants: [sensitive_data]
-    sql: ${first_name} || ' ' || ${last_name} ;;
+    type: string
+    sql: CASE WHEN '{{_user_attributes["can_see_sensitive_data"]}}' = 'Yes'
+                THEN ${first_name} || ' ' || ${last_name}
+                ELSE  ${first_name} || ' ' || SHA2(${last_name}||'aThaY8ar')
+         END ;;
   }
 
   dimension: age {
@@ -50,10 +53,9 @@ view: users {
   }
 
   dimension: email {
-    label: "Email (masked)"
-    sql:   CASE  WHEN '{{_user_attributes["can_see_sensitive_data"]}}' = 'yes'
+    sql:   CASE  WHEN '{{_user_attributes["can_see_sensitive_data"]}}' = 'Yes'
                 THEN ${TABLE}.email
-                ELSE FUNC_SHA1(${TABLE}.email||'aThaY8ar')
+                ELSE SHA2(${TABLE}.email||'aThaY8ar')
             END ;;
     tags: ["email"]
 
