@@ -2,6 +2,7 @@ connection: "snowflake"
 label: "1) eCommerce with Event Data"
 include: "*.view" # include all the views
 
+
 ############ Model Configuration #############
 
 datagroup: ecommerce_etl {
