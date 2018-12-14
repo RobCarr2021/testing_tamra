@@ -4,11 +4,6 @@ include: "*.view" # include all the views
 
 ############ Model Configuration #############
 
-access_grant: sensitive_data {
-  user_attribute: can_see_sensitive_data
-  allowed_values: [ "yes","Yes"]
-}
-
 datagroup: ecommerce_etl {
   sql_trigger: SELECT max(completed_at) FROM ecomm.etl_jobs ;;
   max_cache_age: "24 hours"}

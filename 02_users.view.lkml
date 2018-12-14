@@ -9,8 +9,6 @@ view: users {
     tags: ["user_id"]
   }
 
-  ## Sensitive Fields ##
-
   dimension: first_name {
     hidden: yes
     sql: INITCAP(${TABLE}.first_name) ;;
@@ -22,41 +20,36 @@ view: users {
   }
 
   dimension: name {
-    type: string
-    sql: CASE WHEN '{{_user_attributes["can_see_sensitive_data"]}}' = 'Yes'
-                THEN ${first_name} || ' ' || ${last_name}
-                ELSE  ${first_name} || ' ' || SHA2(${last_name}||'aThaY8ar')
-         END ;;
+    sql: ${first_name} || ' ' || ${last_name} ;;
   }
 
   dimension: age {
-    required_access_grants: [sensitive_data]
     type: number
     sql: ${TABLE}.age ;;
   }
 
-  dimension: latitude {
-    sql: ${TABLE}.latitude ;;
-    hidden: yes
+  dimension: age_tier {
+    type: tier
+    tiers: [0, 10, 20, 30, 40, 50, 60, 70]
+    style: integer
+    sql: ${age} ;;
   }
 
-  dimension: longitude {
-    sql: ${TABLE}.longitude ;;
-    hidden: yes
+  dimension: gender {
+    sql: ${TABLE}.gender ;;
   }
 
-  dimension: location {
-    required_access_grants: [sensitive_data]
-    type: location
-    sql_latitude: ${TABLE}.latitude ;;
-    sql_longitude: ${TABLE}.longitude ;;
+  dimension: gender_short {
+    sql: LOWER(LEFT(${gender},1)) ;;
+  }
+
+  dimension: user_image {
+    sql: ${image_file} ;;
+    html: <img src="{{ value }}" width="220" height="220"/>;;
   }
 
   dimension: email {
-    sql:   CASE  WHEN '{{_user_attributes["can_see_sensitive_data"]}}' = 'Yes'
-                THEN ${TABLE}.email
-                ELSE SHA2(${TABLE}.email||'aThaY8ar')
-            END ;;
+    sql: ${TABLE}.email ;;
     tags: ["email"]
 
     link: {
@@ -93,32 +86,12 @@ view: users {
     required_fields: [name, first_name]
   }
 
-  ## Non Sensitive Demographics Fields ##
-
-  dimension: age_tier {
-    type: tier
-    tiers: [0, 10, 20, 30, 40, 50, 60, 70]
-    style: integer
-    sql: ${age} ;;
-  }
-
-  dimension: gender {
-    sql: ${TABLE}.gender ;;
-  }
-
-  dimension: gender_short {
-    sql: LOWER(LEFT(${gender},1)) ;;
-  }
-
-  dimension: user_image {
-    sql: ${image_file} ;;
-    html: <img src="{{ value }}" width="220" height="220"/>;;
-  }
-
   dimension: image_file {
     hidden: yes
     sql: ('https://docs.looker.com/assets/images/'||${gender_short}||'.jpg') ;;
   }
+
+  ## Demographics ##
 
   dimension: city {
     sql: ${TABLE}.city ;;
@@ -137,7 +110,7 @@ view: users {
   }
 
   dimension: uk_postcode {
-    label: "UK Postcode Area"
+    label: "UK Postcode"
     sql: CASE WHEN ${TABLE}.country = 'UK' THEN TRANSLATE(LEFT(${zip},2),'0123456789','') END ;;
     map_layer_name: uk_postcode_areas
     drill_fields: [city, zip]
@@ -152,6 +125,21 @@ view: users {
        ;;
   }
 
+  dimension: latitude {
+    sql: ${TABLE}.latitude ;;
+    hidden: yes
+  }
+
+  dimension: longitude {
+    sql: ${TABLE}.longitude ;;
+    hidden: yes
+  }
+
+  dimension: location {
+    type: location
+    sql_latitude: ${TABLE}.latitude ;;
+    sql_longitude: ${TABLE}.longitude ;;
+  }
 
   dimension: approx_latitude {
     type: number
@@ -165,6 +153,8 @@ view: users {
     hidden: yes
   }
 
+
+
   dimension: approx_location {
     type: location
     drill_fields: [location]
@@ -176,6 +166,7 @@ view: users {
       icon_url: "http://www.google.com/s2/favicons?domain=www.google.com"
     }
   }
+
 
   ## Other User Information ##
 
@@ -195,6 +186,29 @@ view: users {
     sql: ${TABLE}.traffic_source ;;
   }
 
+  dimension: ssn {
+    # dummy field used in next dim
+    hidden: yes
+    type: number
+    sql: lpad(cast(round(random() * 10000, 0) as char(4)), 4, '0') ;;
+  }
+
+  dimension: ssn_last_4 {
+    label: "SSN Last 4"
+    description: "Only users with sufficient permissions will see this data"
+    type: string
+    sql:
+          CASE  WHEN '{{_user_attributes["can_see_sensitive_data"]}}' = 'yes'
+                THEN ${ssn}
+                ELSE MD5(${ssn}||'salt')
+          END;;
+    html:
+          {% if _user_attributes["can_see_sensitive_data"]  == 'yes' %}
+          {{ value }}
+          {% else %}
+            ####
+          {% endif %}  ;;
+  }
 
   ## MEASURES ##
 
@@ -220,5 +234,4 @@ view: users {
   set: detail {
     fields: [id, name, email, age, created_date,traffic_source , orders.count, order_items.count]
   }
-
 }
