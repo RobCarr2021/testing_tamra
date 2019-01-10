@@ -46,7 +46,7 @@ view: inventory_snapshot {
 
   measure: stock_coverage_ratio {
     type: number
-    sql: 1.0 * ${total_in_stock} / nullif(${trailing_sales_snapshot.sum_trailing_28d_sales},0) ;;
+    sql: 1.0 * ${total_in_stock} / (11.0*nullif(${trailing_sales_snapshot.sum_trailing_28d_sales},0)) ;;
     value_format_name: decimal_2
   }
 
@@ -74,7 +74,7 @@ view: inventory_snapshot {
   measure: stock_coverage_ratio_yday {
     type: number
     view_label: "Stock Ratio Changes"
-    sql: 1.0 * ${sum_stock_yesterday} / nullif(${trailing_sales_snapshot.sum_trailing_28d_sales_yesterday},0) ;;
+    sql: 1.0 * ${sum_stock_yesterday} / (11*nullif(${trailing_sales_snapshot.sum_trailing_28d_sales_yesterday},0)) ;;
     value_format_name: decimal_2
   }
 
