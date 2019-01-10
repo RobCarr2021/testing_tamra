@@ -52,8 +52,11 @@ view: inventory_items {
 
   dimension: days_since_arrival {
     description: "days since created - useful when filtering on sold yesno for items still in inventory"
-    type: number
-    sql: DATEDIFF('day', ${created_date}, GETDATE()) ;;
+    sql: DATEDIFF('day', ${created_date}, ) ;;
+    type: duration_day
+    sql_start: ${created_date} ;;
+    sql_end: CURRENT_DATE ;;
+
   }
 
   dimension: days_since_arrival_tier {

@@ -1,7 +1,5 @@
 view: sessions {
   derived_table: {
-    sortkeys: ["session_id"]
-    distribution: "session_id"
     datagroup_trigger: ecommerce_etl
     sql: SELECT
         session_id
