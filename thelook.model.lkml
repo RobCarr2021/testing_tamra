@@ -17,6 +17,10 @@ persist_with: ecommerce_etl
 
 
 explore: order_items {
+  access_filter: {
+    field: products.brand
+    user_attribute: brand
+  }
   label: "(1) Orders, Items and Users"
   view_name: order_items
 
@@ -217,7 +221,10 @@ explore: journey_mapping {
 explore: inventory_items{
   label: "(7) Stock Analysis"
   fields: [ALL_FIELDS*,-order_items.median_sale_price]
-
+  access_filter: {
+    field: products.brand
+    user_attribute: brand
+  }
   join: order_facts {
     view_label: "Orders"
     relationship: many_to_one
