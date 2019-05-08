@@ -231,6 +231,16 @@ view: users {
     drill_fields: [detail*]
   }
 
+  dimension: test_group {
+    case: {
+      when: {
+        label: "Treatment"
+        sql: ${id} % 2 = 0 ;;
+      }
+      else: "Control"
+    }
+  }
+
   set: detail {
     fields: [id, name, email, age, created_date,traffic_source , orders.count, order_items.count]
   }
