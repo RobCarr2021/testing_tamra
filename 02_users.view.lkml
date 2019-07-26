@@ -45,7 +45,7 @@ view: users {
 
   dimension: user_image {
     sql: ${image_file} ;;
-    html: <img src="{{ value }}" width="220" height="220"/>;;
+    html: <img src="{{ value }}" width="128" height="128"/>;;
   }
 
   dimension: email {
@@ -88,7 +88,7 @@ view: users {
 
   dimension: image_file {
     hidden: yes
-    sql: ('https://docs.looker.com/assets/images/'||${gender_short}||'.jpg') ;;
+    sql: ('https://randomuser.me/api/portraits/' || CASE WHEN ${gender_short} = 'm' THEN 'men' ELSE 'women' END || '/' || RIGHT(${id},1) || '.jpg' ) ;;
   }
 
   ## Demographics ##
@@ -229,6 +229,16 @@ view: users {
     value_format_name: decimal_2
     sql: ${age} ;;
     drill_fields: [detail*]
+  }
+
+  dimension: test_group {
+    case: {
+      when: {
+        label: "Treatment"
+        sql: ${id} % 2 = 0 ;;
+      }
+      else: "Control"
+    }
   }
 
   set: detail {
