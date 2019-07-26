@@ -16,6 +16,7 @@ explore: order_items {
   view_name: order_items
 
   join: order_facts {
+    type: left_outer
     view_label: "Orders"
     relationship: many_to_one
     sql_on: ${order_facts.order_id} = ${order_items.order_id} ;;
@@ -29,17 +30,20 @@ explore: order_items {
   }
 
   join: users {
+    type: left_outer
     relationship: many_to_one
     sql_on: ${order_items.user_id} = ${users.id} ;;
   }
 
   join: user_order_facts {
     view_label: "Users"
+    type: left_outer
     relationship: many_to_one
     sql_on: ${user_order_facts.user_id} = ${order_items.user_id} ;;
   }
 
   join: products {
+    type: left_outer
     relationship: many_to_one
     sql_on: ${products.id} = ${inventory_items.product_id} ;;
   }
@@ -64,12 +68,14 @@ explore: events {
   label: "(2) Web Event Data"
 
   join: sessions {
+    type: left_outer
     sql_on: ${events.session_id} =  ${sessions.session_id} ;;
     relationship: many_to_one
   }
 
   join: session_landing_page {
     from: events
+    type: left_outer
     sql_on: ${sessions.landing_event_id} = ${session_landing_page.event_id} ;;
     fields: [simple_page_info*]
     relationship: one_to_one
@@ -77,6 +83,7 @@ explore: events {
 
   join: session_bounce_page {
     from: events
+    type: left_outer
     sql_on: ${sessions.bounce_event_id} = ${session_bounce_page.event_id} ;;
     fields: [simple_page_info*]
     relationship: many_to_one
@@ -84,16 +91,19 @@ explore: events {
 
   join: product_viewed {
     from: products
+    type: left_outer
     sql_on: ${events.viewed_product_id} = ${product_viewed.id} ;;
     relationship: many_to_one
   }
 
   join: users {
+    type: left_outer
     sql_on: ${sessions.session_user_id} = ${users.id} ;;
     relationship: many_to_one
   }
 
   join: user_order_facts {
+    type: left_outer
     sql_on: ${users.id} = ${user_order_facts.user_id} ;;
     relationship: one_to_one
     view_label: "Users"
@@ -104,18 +114,21 @@ explore: sessions {
   label: "(3) Web Session Data"
 
   join: events {
+    type: left_outer
     sql_on: ${sessions.session_id} = ${events.session_id} ;;
     relationship: one_to_many
   }
 
   join: product_viewed {
     from: products
+    type: left_outer
     sql_on: ${events.viewed_product_id} = ${product_viewed.id} ;;
     relationship: many_to_one
   }
 
   join: session_landing_page {
     from: events
+    type: left_outer
     sql_on: ${sessions.landing_event_id} = ${session_landing_page.event_id} ;;
     fields: [session_landing_page.simple_page_info*]
     relationship: one_to_one
@@ -123,17 +136,20 @@ explore: sessions {
 
   join: session_bounce_page {
     from: events
+    type: left_outer
     sql_on: ${sessions.bounce_event_id} = ${session_bounce_page.event_id} ;;
     fields: [session_bounce_page.simple_page_info*]
     relationship: one_to_one
   }
 
   join: users {
+    type: left_outer
     relationship: many_to_one
     sql_on: ${users.id} = ${sessions.session_user_id} ;;
   }
 
   join: user_order_facts {
+    type: left_outer
     relationship: many_to_one
     sql_on: ${user_order_facts.user_id} = ${users.id} ;;
     view_label: "Users"
@@ -155,6 +171,7 @@ explore: affinity {
 
   join: product_a {
     from: products
+    type: left_outer
     view_label: "Product A Details"
     relationship: many_to_one
     sql_on: ${affinity.product_a_id} = ${product_a.id} ;;
@@ -162,6 +179,7 @@ explore: affinity {
 
   join: product_b {
     from: products
+    type: left_outer
     view_label: "Product B Details"
     relationship: many_to_one
     sql_on: ${affinity.product_b_id} = ${product_b.id} ;;
@@ -190,12 +208,14 @@ explore: journey_mapping {
   }
 
   join: next_order_items {
+    type: left_outer
     from: order_items
     sql_on: ${repeat_purchase_facts.next_order_id} = ${next_order_items.order_id} ;;
     relationship: many_to_many
   }
 
   join: next_order_inventory_items {
+    type: left_outer
     from: inventory_items
     relationship: many_to_one
     sql_on: ${next_order_items.inventory_item_id} = ${next_order_inventory_items.id} ;;
@@ -203,6 +223,7 @@ explore: journey_mapping {
 
   join: next_order_products {
     from: products
+    type: left_outer
     relationship: many_to_one
     sql_on: ${next_order_inventory_items.product_id} = ${next_order_products.id} ;;
   }
@@ -218,11 +239,13 @@ explore: inventory_snapshot {
   }
 
   join: products {
+    type: left_outer
     sql_on: ${inventory_snapshot.product_id} = ${products.id} ;;
     relationship: many_to_one
   }
 
   join: distribution_centers {
+    type: left_outer
     sql_on: ${products.distribution_center_id}=${distribution_centers.id} ;;
     relationship: many_to_one
   }

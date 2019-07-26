@@ -5,7 +5,7 @@ view: order_items {
   dimension: id {
     primary_key: yes
     type: number
-    sql: ${TABLE}.id_2 ;;
+    sql: ${TABLE}.id ;;
   }
 
   dimension: inventory_item_id {
