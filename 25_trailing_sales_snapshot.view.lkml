@@ -11,7 +11,7 @@ view: trailing_sales_snapshot {
 
 
       inventory_items.product_id
-      ,date(order_items.created_at) as snapshot_date
+      ,to_date(order_items.created_at) as snapshot_date
       ,count(*) as trailing_28d_sales
 
       from ecomm.order_items
