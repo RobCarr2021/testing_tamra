@@ -4,6 +4,7 @@ view: events {
   dimension: event_id {
     type: number
     primary_key: yes
+    tags: ["mp_event_id"]
     sql: ${TABLE}.id ;;
   }
 
@@ -79,6 +80,7 @@ view: events {
 
   dimension: event_type {
     sql: ${TABLE}.event_type ;;
+    tags: ["mp_event_name"]
   }
 
   dimension: funnel_step {

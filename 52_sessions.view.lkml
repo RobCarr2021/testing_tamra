@@ -28,10 +28,12 @@ view: sessions {
   dimension: session_id {
     type: string
     primary_key: yes
+    tags: ["mp_session_id"]
     sql: ${TABLE}.session_id ;;
   }
 
   dimension: session_user_id {
+    tags: ["mp_session_uuid"]
     sql: ${TABLE}.session_user_id ;;
   }
 
