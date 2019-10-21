@@ -7,6 +7,7 @@ view: user_order_facts {
         , MIN(created_at) AS first_order
         , MAX(created_at) AS latest_order
         , COUNT(DISTINCT DATE_TRUNC('month', created_at)) AS number_of_distinct_months_with_orders
+        , FIRST_VALUE(CONCAT(uniform(2, 9, random(1)),uniform(0, 9, random(2)),uniform(0, 9, random(3)),'-',uniform(0, 9, random(4)),uniform(0, 9, random(5)),uniform(0, 9, random(6)),'-',uniform(0, 9, random(7)),uniform(0, 9, random(8)),uniform(0, 9, random(9)),uniform(0, 9, random(10)))) OVER (PARTITION BY user_id ORDER BY user_id) AS phone_number
       FROM ecomm.order_items
       GROUP BY user_id
        ;;
@@ -17,6 +18,12 @@ view: user_order_facts {
     primary_key: yes
     hidden: yes
     sql: ${TABLE}.user_id ;;
+  }
+
+  dimension: phone_number {
+    type: string
+    tags: ["phone"]
+    sql: ${TABLE}.phone_number ;;
   }
 
   ##### Time and Cohort Fields ######

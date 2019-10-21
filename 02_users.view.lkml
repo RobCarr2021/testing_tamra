@@ -50,7 +50,7 @@ view: users {
 
   dimension: email {
     sql: ${TABLE}.email ;;
-    tags: ["email"]
+    tags: ["email", "mp_email"]
 
     link: {
       label: "User Lookup Dashboard"
