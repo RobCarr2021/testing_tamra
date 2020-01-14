@@ -1,5 +1,5 @@
-include: "01_order_items.view.lkml"
-include: "02_users.view.lkml"
+include: "/views/**/01_order_items.view.lkml"
+include: "/views/**/02_users.view.lkml"
 ## kittens for certain demos
 
 view: kitten_users {
