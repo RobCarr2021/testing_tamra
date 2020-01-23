@@ -9,9 +9,6 @@
     title_color: "#3a4245"
     show_filters_bar: false
     tile_text_color: "#3a4245"
-    tile_separator_color: "#bdb7b7"
-    tile_border_radius: 2
-    show_tile_shadow: false
     text_tile_text_color: ''
   elements:
   - title: Number of First Purchasers
@@ -169,7 +166,7 @@
     width: 16
     height: 6
   - title: Website Visit Volume vs. Conversion Rate
-    name: Website Visit Volume vs. Conversion Rate
+    name: Website Visit Volume vs Conversion Rate
     model: thelook
     explore: events
     type: looker_column
