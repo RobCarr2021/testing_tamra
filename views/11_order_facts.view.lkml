@@ -2,7 +2,7 @@ include: "/models/**/thelook.model.lkml"
 view: order_facts {
   derived_table: {
     explore_source: order_items {
-      column: order_id {}
+      column: order_id_no_action {}
       column: items_in_order { field: order_items.count }
       column: order_amount { field: order_items.total_sale_price }
       column: order_cost { field: inventory_items.total_cost }
