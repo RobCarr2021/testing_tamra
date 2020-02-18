@@ -21,7 +21,8 @@ view: order_items {
   }
 
   measure: count {
-    type: count
+    type: count_distinct
+    sql: ${id} ;;
     drill_fields: [detail*]
   }
 
@@ -42,12 +43,6 @@ view: order_items {
     {field:created_date
       value: "28 days"
     }}
-
-  dimension: order_id_no_action {
-    hidden: yes
-    type: number
-    sql: ${TABLE}.order_id ;;
-    }
 
   dimension: order_id {
     type: number
