@@ -44,6 +44,12 @@ view: order_items {
       value: "28 days"
     }}
 
+    dimension: order_id_no_actions {
+      type: number
+      sql: ${TABLE}.order_id ;;
+      hidden: yes
+      }
+
   dimension: order_id {
     type: number
     sql: ${TABLE}.order_id ;;
