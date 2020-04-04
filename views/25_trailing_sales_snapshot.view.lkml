@@ -2,27 +2,24 @@ view: trailing_sales_snapshot {
   derived_table: {
     datagroup_trigger: ecommerce_etl
     sql: with calendar as
-      (select distinct to_date(created_at) as snapshot_date
+      (select distinct created_at as snapshot_date
       from ecomm.inventory_items
       -- where dateadd('day',90,created_at)>=current_date
       )
 
       select
-
-
-      inventory_items.product_id
-      ,to_date(order_items.created_at) as snapshot_date
-      ,count(*) as trailing_28d_sales
-
+        inventory_items.product_id
+        ,date(order_items.created_at) as snapshot_date
+        ,count(*) as trailing_28d_sales
       from ecomm.order_items
-      left join ecomm.inventory_items on order_items.inventory_item_id = inventory_items.id
-      left join calendar
-      on order_items.created_at <= dateadd('day',28,calendar.snapshot_date)
-      and order_items.created_at >= calendar.snapshot_date
+      join ecomm.inventory_items
+        on order_items.inventory_item_id = inventory_items.id
+      join calendar
+        on date(order_items.created_at) <= date_add(calendar.snapshot_date, interval 28 day)
+        and date(order_items.created_at) >= calendar.snapshot_date
       -- where dateadd('day',90,calendar.snapshot_date)>=current_date
       group by 1,2
-
- ;;
+    ;;
   }
 
 #   measure: count {
@@ -37,7 +34,7 @@ view: trailing_sales_snapshot {
 
   dimension: snapshot_date {
     type: date
-    sql: ${TABLE}.snapshot_date ;;
+    sql: cast(${TABLE}.snapshot_date as timestamp) ;;
   }
 
   dimension: trailing_28d_sales {
@@ -60,7 +57,6 @@ view: trailing_sales_snapshot {
       value: "yesterday"
     }
   }
-
 
   measure: sum_trailing_28d_sales_last_wk {
     type: sum

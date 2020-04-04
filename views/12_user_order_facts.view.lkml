@@ -1,16 +1,17 @@
 view: user_order_facts {
   derived_table: {
-    sql: SELECT
+    sql:
+    SELECT
         user_id
         , COUNT(DISTINCT order_id) AS lifetime_orders
         , SUM(sale_price) AS lifetime_revenue
-        , MIN(created_at) AS first_order
-        , MAX(created_at) AS latest_order
-        , COUNT(DISTINCT DATE_TRUNC('month', created_at)) AS number_of_distinct_months_with_orders
-        , FIRST_VALUE(CONCAT(uniform(2, 9, random(1)),uniform(0, 9, random(2)),uniform(0, 9, random(3)),'-',uniform(0, 9, random(4)),uniform(0, 9, random(5)),uniform(0, 9, random(6)),'-',uniform(0, 9, random(7)),uniform(0, 9, random(8)),uniform(0, 9, random(9)),uniform(0, 9, random(10)))) OVER (PARTITION BY user_id ORDER BY user_id) AS phone_number
+        , CAST(MIN(created_at)  AS TIMESTAMP) AS first_order
+        , CAST(MAX(created_at)  AS TIMESTAMP)  AS latest_order
+        , COUNT(DISTINCT FORMAT_TIMESTAMP('%Y%m', created_at))  AS number_of_distinct_months_with_orders
+        --, FIRST_VALUE(CONCAT(uniform(2, 9, random(1)),uniform(0, 9, random(2)),uniform(0, 9, random(3)),'-',uniform(0, 9, random(4)),uniform(0, 9, random(5)),uniform(0, 9, random(6)),'-',uniform(0, 9, random(7)),uniform(0, 9, random(8)),uniform(0, 9, random(9)),uniform(0, 9, random(10)))) OVER (PARTITION BY user_id ORDER BY user_id) AS phone_number
       FROM ecomm.order_items
       GROUP BY user_id
-       ;;
+    ;;
     datagroup_trigger: ecommerce_etl
   }
 
@@ -20,11 +21,12 @@ view: user_order_facts {
     sql: ${TABLE}.user_id ;;
   }
 
-  dimension: phone_number {
-    type: string
-    tags: ["phone"]
-    sql: ${TABLE}.phone_number ;;
-  }
+#   dimension: phone_number {
+#     type: string
+#     tags: ["phone"]
+#     sql: ${TABLE}.phone_number ;;
+#   }
+
 
   ##### Time and Cohort Fields ######
 
@@ -43,7 +45,7 @@ view: user_order_facts {
   dimension: days_as_customer {
     description: "Days between first and latest order"
     type: number
-    sql: DATEDIFF('day', ${TABLE}.first_order, ${TABLE}.latest_order)+1 ;;
+    sql: TIMESTAMP_DIFF(${TABLE}.latest_order, ${TABLE}.first_order, DAY)+1 ;;
   }
 
   dimension: days_as_customer_tiered {

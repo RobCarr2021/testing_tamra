@@ -2,46 +2,43 @@ view: affinity {
   derived_table: {
     datagroup_trigger: ecommerce_etl
     sql: SELECT
-        product_a_id
-        , product_b_id
-        , joint_user_freq
-        , joint_order_freq
-        , top1.prod_freq AS product_a_freq
-        , top2.prod_freq AS product_b_freq
-
-      FROM
-          (
-              SELECT
-                up1.prod_id AS product_a_id
-                , up2.prod_id AS product_b_id
-                , COUNT(*) AS joint_user_freq
-              FROM ${user_order_product.SQL_TABLE_NAME} AS up1
-              LEFT JOIN ${user_order_product.SQL_TABLE_NAME} AS up2
-                ON up1.user_id = up2.user_id
-                AND up1.prod_id <> up2.prod_id
-              GROUP BY product_a_id, product_b_id
-          ) AS juf
-
-      LEFT JOIN
-          (
-              SELECT
-                op1.prod_id AS oproduct_a_id
-                , op2.prod_id AS oproduct_b_id
-                , COUNT(*) AS joint_order_freq
-              FROM ${user_order_product.SQL_TABLE_NAME} op1
-              LEFT JOIN ${user_order_product.SQL_TABLE_NAME} op2
-                ON op1.order_id = op2.order_id
-                AND op1.prod_id <> op2.prod_id
-              GROUP BY oproduct_a_id, oproduct_b_id
-          ) AS jof
-
-        ON jof.oproduct_a_id = juf.product_a_id
-        AND jof.oproduct_b_id = juf.product_b_id
-      LEFT JOIN ${total_order_product.SQL_TABLE_NAME} top1
-        ON top1.prod_id = juf.product_a_id
-      LEFT JOIN ${total_order_product.SQL_TABLE_NAME} top2
-        ON top2.prod_id = juf.product_b_id
-       ;;
+          product_a_id
+          , product_b_id
+          , joint_user_freq
+          , joint_order_freq
+          , top1.prod_freq AS product_a_freq
+          , top2.prod_freq AS product_b_freq
+        FROM
+        (
+        SELECT
+          up1.prod_id AS product_a_id
+          , up2.prod_id AS product_b_id
+          , COUNT(*) AS joint_user_freq
+        FROM ${user_order_product.SQL_TABLE_NAME} AS up1
+          LEFT JOIN ${user_order_product.SQL_TABLE_NAME} AS up2
+            ON up1.user_id = up2.user_id
+            AND up1.prod_id <> up2.prod_id
+          GROUP BY product_a_id, product_b_id
+        ) AS juf
+    LEFT JOIN
+      (
+      SELECT
+        op1.prod_id AS oproduct_a_id
+        , op2.prod_id AS oproduct_b_id
+        , COUNT(*) AS joint_order_freq
+      FROM ${user_order_product.SQL_TABLE_NAME} op1
+        LEFT JOIN ${user_order_product.SQL_TABLE_NAME} op2
+          ON op1.order_id = op2.order_id
+          AND op1.prod_id <> op2.prod_id
+        GROUP BY oproduct_a_id, oproduct_b_id
+      ) AS jof
+      ON jof.oproduct_a_id = juf.product_a_id
+      AND jof.oproduct_b_id = juf.product_b_id
+    LEFT JOIN ${total_order_product.SQL_TABLE_NAME} top1
+      ON top1.prod_id = juf.product_a_id
+    LEFT JOIN ${total_order_product.SQL_TABLE_NAME} top2
+      ON top2.prod_id = juf.product_b_id
+    ;;
   }
 
   measure: count {

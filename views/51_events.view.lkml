@@ -67,13 +67,13 @@ view: events {
   }
 
   dimension: full_page_url {
-    sql: ${TABLE}."uri" ;;
+    sql: ${TABLE}.uri ;;
   }
 
   dimension: viewed_product_id {
     type: number
-    sql: CASE
-        WHEN ${event_type} = 'Product' THEN right(${full_page_url},length(${full_page_url})-9)
+    sql: CASE WHEN ${event_type} = 'Product' THEN
+          CAST(SPLIT(${full_page_url}, '/')[OFFSET(ARRAY_LENGTH(SPLIT(${full_page_url}, '/'))-1)] AS INT64)
       END
        ;;
   }
@@ -177,10 +177,7 @@ view: events {
   }
 
   set: simple_page_info {
-    fields: [event_id, event_time, event_type,
-      #       - os
-      #       - browser
-      full_page_url, user_id, funnel_step]
+    fields: [event_id, event_time, event_type, full_page_url, user_id, funnel_step]
   }
 
   set: visitors {

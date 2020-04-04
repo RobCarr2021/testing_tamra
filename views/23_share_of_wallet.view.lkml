@@ -32,10 +32,10 @@ view: order_items_share_of_wallet {
     view_label: "Share of Wallet (Item Level)"
     description: "Compare a selected item vs. other items in the brand vs. all other brands"
     sql: CASE
-      WHEN {% condition item_name %} trim(products.item_name) {% endcondition %}
-      THEN '(1) '||${products.item_name}
-      WHEN  {% condition brand %} trim(products.brand) {% endcondition %}
-      THEN '(2) Rest of '||${products.brand}
+      WHEN {% condition item_name %} rtrim(ltrim(products.item_name)) {% endcondition %}
+      THEN concat('(1) ',${products.item_name})
+      WHEN  {% condition brand %} rtrim(ltrim(products.brand)) {% endcondition %}
+      THEN concat('(2) Rest of ', ${products.brand})
       ELSE '(3) Rest of Population'
       END
        ;;
@@ -45,8 +45,8 @@ view: order_items_share_of_wallet {
     view_label: "Share of Wallet (Brand Level)"
     description: "Compare a selected brand vs. all other brands"
     sql: CASE
-      WHEN  {% condition brand %} trim(products.brand) {% endcondition %}
-      THEN '(1) '||${products.brand}
+      WHEN  {% condition brand %} rtrim(ltrim(products.brand)) {% endcondition %}
+      THEN concat('(1) ',${products.brand})
       ELSE '(2) Rest of Population'
       END
        ;;

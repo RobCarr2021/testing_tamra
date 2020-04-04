@@ -1,5 +1,6 @@
 view: order_items {
   sql_table_name: ecomm.order_items ;;
+
   ########## IDs, Foreign Keys, Counts ###########
 
   dimension: id {
@@ -21,18 +22,9 @@ view: order_items {
   }
 
   measure: count {
-    type: count_distinct
-    sql: ${id} ;;
+    type: count
     drill_fields: [detail*]
   }
-
-  measure: order_count {
-    view_label: "Orders"
-    type: count_distinct
-    drill_fields: [detail*]
-    sql: ${order_id} ;;
-  }
-
 
   measure: count_last_28d {
     label: "Count Sold in Trailing 28 Days"
@@ -44,26 +36,40 @@ view: order_items {
       value: "28 days"
     }}
 
-    dimension: order_id_no_actions {
-      type: number
-      sql: ${TABLE}.order_id ;;
-      hidden: yes
-      }
+  measure: order_count {
+    view_label: "Orders"
+    type: count_distinct
+    drill_fields: [detail*]
+    sql: ${order_id} ;;
+  }
+
+  measure: first_purchase_count {
+    view_label: "Orders"
+    type: count_distinct
+    sql: ${order_id} ;;
+    filters: {
+      field: order_facts.is_first_purchase
+      value: "Yes"
+    }
+    drill_fields: [user_id, users.name, users.email, order_id, created_date, users.traffic_source]
+  }
+
+  dimension: order_id_no_actions {
+    type: number
+    hidden: yes
+    sql: ${TABLE}.order_id ;;
+  }
 
   dimension: order_id {
     type: number
     sql: ${TABLE}.order_id ;;
-
-
     action: {
       label: "Send this to slack channel"
       url: "https://hooks.zapier.com/hooks/catch/1662138/tvc3zj/"
-
       param: {
         name: "user_dash_link"
-        value: "https://demo.looker.com/dashboards/160?Email={{ users.email._value}}"
+        value: "/dashboards/thelook_event::customer_lookup?Email={{ users.email._value}}"
       }
-
       form_param: {
         name: "Message"
         type: textarea
@@ -72,7 +78,6 @@ view: order_items {
         but the customer is reaching out to us about it.
         ~{{ _user_attributes.first_name}}"
       }
-
       form_param: {
         name: "Recipient"
         type: select
@@ -85,9 +90,7 @@ view: order_items {
           name: "slackdemo"
           label: "Slack Demo User"
         }
-
       }
-
       form_param: {
         name: "Channel"
         type: select
@@ -102,47 +105,7 @@ view: order_items {
         }
       }
     }
-    action: {
-      label: "Create Order Form"
-      url: "https://hooks.zapier.com/hooks/catch/2813548/oosxkej/"
-      form_param: {
-        name: "Order ID"
-        type: string
-        default: "{{ order_id._value }}"
-      }
-
-      form_param: {
-        name: "Name"
-        type: string
-        default: "{{ users.name._value }}"
-      }
-
-      form_param: {
-        name: "Email"
-        type: string
-        default: "{{ _user_attributes.email }}"
-      }
-
-      form_param: {
-        name: "Item"
-        type: string
-        default: "{{ products.item_name._value }}"
-      }
-
-      form_param: {
-        name: "Price"
-        type: string
-        default: "{{ order_items.sale_price._rendered_value }}"
-      }
-
-      form_param: {
-        name: "Comments"
-        type: string
-        default: " Hi {{ users.first_name._value }}, thanks for your business!"
-      }
-      }
-    }
-
+  }
 
   ########## Time Dimensions ##########
 
@@ -150,35 +113,39 @@ view: order_items {
     type: time
     timeframes: [time, date, week, month, raw]
     sql: ${TABLE}.returned_at ;;
+
   }
 
   dimension_group: shipped {
     type: time
     timeframes: [date, week, month, raw]
-    sql: ${TABLE}.shipped_at ;;
+    sql: CAST(${TABLE}.shipped_at AS TIMESTAMP) ;;
+
   }
 
   dimension_group: delivered {
     type: time
     timeframes: [date, week, month, raw]
-    sql: ${TABLE}.delivered_at ;;
+    sql: CAST(${TABLE}.delivered_at AS TIMESTAMP) ;;
+
   }
 
   dimension_group: created {
     type: time
-    timeframes: [time, hour, date, week, month, year, hour_of_day, day_of_week, month_num, month_name, raw, week_of_year]
+    timeframes: [time, hour, date, week, month, year, hour_of_day, day_of_week, month_num, raw, week_of_year,month_name]
     sql: ${TABLE}.created_at ;;
+
   }
 
   dimension: reporting_period {
     group_label: "Order Date"
     sql: CASE
-        WHEN date_part('year',${created_raw}) = date_part('year',current_date)
-        AND ${created_raw} < CURRENT_DATE
+        WHEN EXTRACT(YEAR from ${created_raw}) = EXTRACT(YEAR from CURRENT_TIMESTAMP())
+        AND ${created_raw} < CURRENT_TIMESTAMP()
         THEN 'This Year to Date'
 
-        WHEN date_part('year',${created_raw}) + 1 = date_part('year',current_date)
-        AND date_part('dayofyear',${created_raw}) <= date_part('dayofyear',current_date)
+        WHEN EXTRACT(YEAR from ${created_raw}) + 1 = EXTRACT(YEAR from CURRENT_TIMESTAMP())
+        AND CAST(FORMAT_TIMESTAMP('%j', ${created_raw}) AS INT64) <= CAST(FORMAT_TIMESTAMP('%j', CURRENT_TIMESTAMP()) AS INT64)
         THEN 'Last Year to Date'
 
       END
@@ -187,13 +154,13 @@ view: order_items {
 
   dimension: days_since_sold {
     hidden: yes
-    sql: datediff('day',${created_raw},CURRENT_DATE) ;;
+    sql: TIMESTAMP_DIFF(${created_raw},CURRENT_TIMESTAMP(), DAY) ;;
   }
 
   dimension: months_since_signup {
     view_label: "Orders"
     type: number
-    sql: DATEDIFF('month',${users.created_raw},${created_raw}) ;;
+    sql: CAST(FLOOR(TIMESTAMP_DIFF(${created_raw}, ${users.created_raw}, DAY)/30) AS INT64) ;;
   }
 
 ########## Logistics ##########
@@ -205,8 +172,8 @@ view: order_items {
   dimension: days_to_process {
     type: number
     sql: CASE
-        WHEN ${status} = 'Processing' THEN DATEDIFF('day',${created_raw},current_date)*1.0
-        WHEN ${status} IN ('Shipped', 'Complete', 'Returned') THEN DATEDIFF('day',${created_raw},${shipped_raw})*1.0
+        WHEN ${status} = 'Processing' THEN TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), ${created_raw}, DAY)*1.0
+        WHEN ${status} IN ('Shipped', 'Complete', 'Returned') THEN TIMESTAMP_DIFF(${shipped_raw}, ${created_raw}, DAY)*1.0
         WHEN ${status} = 'Cancelled' THEN NULL
       END
        ;;
@@ -214,7 +181,7 @@ view: order_items {
 
   dimension: shipping_time {
     type: number
-    sql: datediff('day',${shipped_raw},${delivered_raw})*1.0 ;;
+    sql: TIMESTAMP_DIFF(${delivered_raw}, ${shipped_raw}, DAY)*1.0 ;;
   }
 
   measure: average_days_to_process {
@@ -246,7 +213,7 @@ view: order_items {
   dimension: item_gross_margin_percentage {
     type: number
     value_format_name: percent_2
-    sql: 1.0 * ${gross_margin}/NULLIF(${sale_price},0) ;;
+    sql: 1.0 * ${gross_margin}/(CASE WHEN ${sale_price} = 0 THEN NULL ELSE ${sale_price} END) ;;
   }
 
   dimension: item_gross_margin_percentage_tier {
@@ -277,12 +244,12 @@ view: order_items {
     drill_fields: [detail*]
   }
 
-    measure: median_sale_price {
-      type: median
-      value_format_name: usd
-      sql: ${sale_price} ;;
-      drill_fields: [detail*]
-    }
+  measure: median_sale_price {
+    type: median
+    value_format_name: usd
+    sql: ${sale_price} ;;
+    drill_fields: [detail*]
+  }
 
   measure: average_gross_margin {
     type: average
@@ -294,13 +261,13 @@ view: order_items {
   measure: total_gross_margin_percentage {
     type: number
     value_format_name: percent_2
-    sql: 1.0 * ${total_gross_margin}/ NULLIF(${total_sale_price},0) ;;
+    sql: 1.0 * ${total_gross_margin}/ (CASE WHEN ${total_sale_price} = 0 THEN NULL ELSE ${total_sale_price} END) ;;
   }
 
   measure: average_spend_per_user {
     type: number
     value_format_name: usd
-    sql: 1.0 * ${total_sale_price} / NULLIF(${users.count},0) ;;
+    sql: 1.0 * ${total_sale_price} / (CASE WHEN ${users.count} = 0 THEN NULL ELSE ${users.count} END) ;;
     drill_fields: [detail*]
   }
 
@@ -343,7 +310,7 @@ view: order_items {
   dimension: days_until_next_order {
     type: number
     view_label: "Repeat Purchase Facts"
-    sql: DATEDIFF('day',${created_raw},${repeat_purchase_facts.next_order_raw}) ;;
+    sql: TIMESTAMP_DIFF(${created_raw},${repeat_purchase_facts.next_order_raw}, DAY) ;;
   }
 
   dimension: repeat_orders_within_30d {
@@ -368,131 +335,71 @@ view: order_items {
     view_label: "Repeat Purchase Facts"
     type: number
     value_format_name: percent_1
-    sql: 1.0 * ${count_with_repeat_purchase_within_30d} / NULLIF(${count},0) ;;
-    drill_fields: [products.brand, order_count, count_with_repeat_purchase_within_30d, 30_day_repeat_purchase_rate]
-  }
-
-  measure: first_purchase_count {
-    view_label: "Orders"
-    type: count_distinct
-    sql: ${order_id} ;;
-
-    filters: {
-      field: order_facts.is_first_purchase
-      value: "Yes"
-    }
-    # customized drill path for first_purchase_count
-    drill_fields: [user_id, order_id, created_date, users.traffic_source]
-    link: {
-      label: "New User's Behavior by Traffic Source"
-      url: "
-      {% assign vis_config = '{
-      \"type\": \"looker_column\",
-      \"show_value_labels\": true,
-      \"y_axis_gridlines\": true,
-      \"show_view_names\": false,
-      \"y_axis_combined\": false,
-      \"show_y_axis_labels\": true,
-      \"show_y_axis_ticks\": true,
-      \"show_x_axis_label\": false,
-      \"value_labels\": \"legend\",
-      \"label_type\": \"labPer\",
-      \"font_size\": \"13\",
-      \"colors\": [
-      \"#1ea8df\",
-      \"#a2dcf3\",
-      \"#929292\"
-      ],
-      \"hide_legend\": false,
-      \"y_axis_orientation\": [
-      \"left\",
-      \"right\"
-      ],
-      \"y_axis_labels\": [
-      \"Average Sale Price ($)\"
-      ]
-      }' %}
-      {{ hidden_first_purchase_visualization_link._link }}&vis_config={{ vis_config | encode_uri }}&sorts=users.average_lifetime_orders+descc&toggle=dat,pik,vis&limit=5000"
-    }
+    sql: 1.0 * ${count_with_repeat_purchase_within_30d} / (CASE WHEN ${count} = 0 THEN NULL ELSE ${count} END) ;;
+    drill_fields: [products.brand, order_count, count_with_repeat_purchase_within_30d]
   }
 
 ########## Dynamic Sales Cohort App ##########
 
-  filter: cohort_by {
-    type: string
-    hidden: yes
-    suggestions: ["Week", "Month", "Quarter", "Year"]
-  }
-
-  filter: metric {
-    type: string
-    hidden: yes
-    suggestions: ["Order Count", "Gross Margin", "Total Sales", "Unique Users"]
-  }
-
-  dimension_group: first_order_period {
-    type: time
-    timeframes: [date]
-    hidden: yes
-    sql: CAST(DATE_TRUNC({% parameter cohort_by %}, ${user_order_facts.first_order_date}) AS DATE)
-      ;;
-  }
-
-  dimension: periods_as_customer {
-    type: number
-    hidden: yes
-    sql: DATEDIFF({% parameter cohort_by %}, ${user_order_facts.first_order_date}, ${user_order_facts.latest_order_date})
-      ;;
-  }
-
-  measure: cohort_values_0 {
-    type: count_distinct
-    hidden: yes
-    sql: CASE WHEN {% parameter metric %} = 'Order Count' THEN ${id}
-        WHEN {% parameter metric %} = 'Unique Users' THEN ${users.id}
-        ELSE null
-      END
-       ;;
-  }
-
-  measure: cohort_values_1 {
-    type: sum
-    hidden: yes
-    sql: CASE WHEN {% parameter metric %} = 'Gross Margin' THEN ${gross_margin}
-        WHEN {% parameter metric %} = 'Total Sales' THEN ${sale_price}
-        ELSE 0
-      END
-       ;;
-  }
-
-  measure: values {
-    type: number
-    hidden: yes
-    sql: ${cohort_values_0} + ${cohort_values_1} ;;
-  }
-
-  measure: hidden_first_purchase_visualization_link {
-    hidden: yes
-    view_label: "Orders"
-    type: count_distinct
-    sql: ${order_id} ;;
-
-    filters: {
-      field: order_facts.is_first_purchase
-      value: "Yes"
-    }
-    drill_fields: [users.traffic_source, user_order_facts.average_lifetime_revenue, user_order_facts.average_lifetime_orders]
-  }
-
-
-
+#   filter: cohort_by {
+#     type: string
+#     hidden: yes
+#     suggestions: ["Week", "Month", "Quarter", "Year"]
+#   }
+#
+#   filter: metric {
+#     type: string
+#     hidden: yes
+#     suggestions: ["Order Count", "Gross Margin", "Total Sales", "Unique Users"]
+#   }
+#
+#   dimension_group: first_order_period {
+#     type: time
+#     timeframes: [date]
+#     hidden: yes
+#     sql: CAST(DATE_TRUNC({% parameter cohort_by %}, ${user_order_facts.first_order_date}) AS TIMESTAMP)
+#       ;;
+#   }
+#
+#   dimension: periods_as_customer {
+#     type: number
+#     hidden: yes
+#     sql: TIMESTAMP_DIFF(${user_order_facts.first_order_date}, ${user_order_facts.latest_order_date}, {% parameter cohort_by %})
+#       ;;
+#   }
+#
+#   measure: cohort_values_0 {
+#     type: count_distinct
+#     hidden: yes
+#     sql: CASE WHEN {% parameter metric %} = 'Order Count' THEN ${id}
+#         WHEN {% parameter metric %} = 'Unique Users' THEN ${users.id}
+#         ELSE null
+#       END
+#        ;;
+#   }
+#
+#   measure: cohort_values_1 {
+#     type: sum
+#     hidden: yes
+#     sql: CASE WHEN {% parameter metric %} = 'Gross Margin' THEN ${gross_margin}
+#         WHEN {% parameter metric %} = 'Total Sales' THEN ${sale_price}
+#         ELSE 0
+#       END
+#        ;;
+#   }
+#
+#   measure: values {
+#     type: number
+#     hidden: yes
+#     sql: ${cohort_values_0} + ${cohort_values_1} ;;
+#   }
 
 ########## Sets ##########
 
   set: detail {
-    fields: [id, order_id, status, created_date, sale_price, products.brand, products.item_name, users.portrait, users.name, users.email, user_order_facts.phone_number]
+    fields: [id, order_id, status, created_date, sale_price, products.brand, products.item_name, users.portrait, users.name, users.email]
   }
   set: return_detail {
-      fields: [id, order_id, status, created_date, returned_date, sale_price, products.brand, products.item_name, users.portrait, users.name, users.email]
+    fields: [id, order_id, status, created_date, returned_date, sale_price, products.brand, products.item_name, users.portrait, users.name, users.email]
   }
 }

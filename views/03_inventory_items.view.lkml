@@ -1,5 +1,6 @@
 view: inventory_items {
   sql_table_name: ecomm.inventory_items ;;
+
   ## DIMENSIONS ##
 
   dimension: id {
@@ -17,7 +18,8 @@ view: inventory_items {
   dimension_group: created {
     type: time
     timeframes: [time, date, week, month, raw]
-    sql: ${TABLE}.created_at ;;
+    #sql: cast(CASE WHEN ${TABLE}.created_at = "\\N" THEN NULL ELSE ${TABLE}.created_at END as timestamp) ;;
+    sql: CAST(${TABLE}.created_at AS TIMESTAMP) ;;
   }
 
   dimension: product_id {
@@ -29,6 +31,7 @@ view: inventory_items {
   dimension_group: sold {
     type: time
     timeframes: [time, date, week, month, raw]
+#    sql: cast(CASE WHEN ${TABLE}.sold_at = "\\N" THEN NULL ELSE ${TABLE}.sold_at END as timestamp) ;;
     sql: ${TABLE}.sold_at ;;
   }
 
@@ -40,7 +43,7 @@ view: inventory_items {
   dimension: days_in_inventory {
     description: "days between created and sold date"
     type: number
-    sql: DATEDIFF('day', ${created_raw}, coalesce(${sold_raw},CURRENT_DATE)) ;;
+    sql: TIMESTAMP_DIFF(coalesce(${sold_raw}, CURRENT_TIMESTAMP()), ${created_raw}, DAY) ;;
   }
 
   dimension: days_in_inventory_tier {
@@ -52,11 +55,8 @@ view: inventory_items {
 
   dimension: days_since_arrival {
     description: "days since created - useful when filtering on sold yesno for items still in inventory"
-    sql: DATEDIFF('day', ${created_date}, ) ;;
-    type: duration_day
-    sql_start: ${created_date} ;;
-    sql_end: CURRENT_DATE ;;
-
+    type: number
+    sql: TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), ${created_raw}, DAY) ;;
   }
 
   dimension: days_since_arrival_tier {
@@ -86,7 +86,7 @@ view: inventory_items {
   measure: sold_percent {
     type: number
     value_format_name: percent_2
-    sql: 1.0 * ${sold_count}/NULLIF(${count},0) ;;
+    sql: 1.0 * ${sold_count}/(CASE WHEN ${count} = 0 THEN NULL ELSE ${count} END) ;;
   }
 
   measure: total_cost {
@@ -119,7 +119,7 @@ view: inventory_items {
   measure: stock_coverage_ratio {
     type:  number
     description: "Stock on Hand vs Trailing 28d Sales Ratio"
-    sql:  1.0 * ${number_on_hand} / (17.0*nullif(${order_items.count_last_28d},0)) ;;
+    sql:  1.0 * ${number_on_hand} / nullif(${order_items.count_last_28d},0) ;;
     value_format_name: decimal_2
     html: <p style="color: black; background-color: rgba({{ value | times: -100.0 | round | plus: 250 }},{{value | times: 100.0 | round | plus: 100}},100,80); font-size:100%; text-align:center">{{ rendered_value }}</p> ;;
   }

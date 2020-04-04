@@ -36,7 +36,6 @@ explore: cohorts {
   }
 }
 
-
 ########################################################################################
 # Define Cohort Size
 # dynamically swap grouping for user signup month, gender, age group, traffic source
@@ -48,7 +47,7 @@ view: cohort_size {
     sql: SELECT
       CASE
         WHEN {% parameter cohort_filter %} = 'User Signup Month'
-          THEN TO_CHAR(DATE_TRUNC('month', CONVERT_TIMEZONE('UTC', 'America/Los_Angeles', users.created_at )), 'YYYY-MM')
+          THEN cast(DATE_TRUNC(date(users.created_at), MONTH) as string)
         WHEN {% parameter cohort_filter %} = 'Gender'
           THEN users.gender
         WHEN {% parameter cohort_filter %} = 'Traffic Source'
@@ -67,14 +66,13 @@ view: cohort_size {
               WHEN users.age  >= 70 THEN '70 or Above'
               ELSE 'Undefined'
             END)
-      ELSE TO_CHAR(DATE_TRUNC('month', CONVERT_TIMEZONE('UTC', 'America/Los_Angeles', users.created_at )), 'YYYY-MM')
+      ELSE cast(DATE_TRUNC(date(users.created_at), MONTH) as string)
       END AS cohort,
       COUNT(DISTINCT users.id ) AS cohort_size
       FROM ecomm.users AS users
       GROUP BY 1
        ;;
   }
-
 
   parameter: cohort_filter {
     label: "Cohort Picker"
@@ -106,7 +104,7 @@ view: cohort_size {
     type: string
     sql: ${TABLE}.cohort ;;
     label_from_parameter: cohort_filter
-    }
+  }
 
   measure: metric {
     type: number
@@ -117,17 +115,14 @@ view: cohort_size {
           WHEN {% parameter metric_filter %} = 'Average Spend per User' THEN trunc(${average_spend_per_user})
           ELSE NULL
         END ;;
-    html:  {% if metric_name._value contains 'User Retention' %}
-            {{ linked_value }}{{ format_symbol._value }}
-          {% else %}
-            {{ format_symbol._value }}{{ linked_value }}
-          {% endif %} ;;
+#     html:  {% if metric_name._value contains 'User Retention' %}
+#             {{ linked_value }}{{ format_symbol._value }}
+#           {% else %}
+#             {{ format_symbol._value }}{{ linked_value }}
+#           {% endif %} ;;
     drill_fields: [cohort_size, percent_user_retention, users.count, average_orders_per_user, average_spend_per_user]
     label_from_parameter: metric_filter
   }
-
-#         WHEN {% parameter metric_filter %} = 'Cumulative Spend' THEN trunc(${cumulative_spend})
-
 
   measure: percent_user_retention {
     view_label: "Users"
@@ -164,37 +159,6 @@ view: cohort_size {
 #   }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ################################################################
 # Used for dynamically applying a format to the metric parameter
 ################################################################
@@ -218,17 +182,16 @@ view: cohort_size {
           WHEN ${metric_name} = 'User Retention' THEN '%'
           WHEN ${metric_name} = 'Average Spend per User' THEN '$'
           WHEN ${metric_name} = 'Cumulative Spend' THEN '$'
+          ELSE NULL
         END ;;
   }
-
-
-
 }
 
 
 ################################################################
 # Group 'months since signup' under Order Items
 ################################################################
+
 
 view: order_items_cohorts {
   extends: [order_items]
@@ -237,6 +200,6 @@ view: order_items_cohorts {
     view_label: "Order Items"
     description: "Months an order occurred since the user first signed up"
     type: number
-    sql: DATEDIFF('month',${users.created_raw},${created_raw}) ;;
+    sql: DATE_DIFF(date(${users.created_raw}), date(${created_raw}), MONTH) ;;
   }
 }

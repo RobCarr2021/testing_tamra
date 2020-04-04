@@ -15,6 +15,7 @@ view: order_facts {
     }
     datagroup_trigger: ecommerce_etl
   }
+
   dimension: order_id {
     type: number
     hidden: yes
@@ -43,7 +44,6 @@ view: order_facts {
     type: number
     value_format_name: usd
   }
-
 
   dimension: order_sequence_number {
     type: number

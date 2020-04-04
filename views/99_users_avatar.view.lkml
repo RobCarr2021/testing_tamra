@@ -15,7 +15,7 @@ view: kitten_users {
 
   dimension: name {
     label: "Kitten Name"
-    sql: ${first_name} || ' ' || ${TABLE}.last_name ;;
+    sql: CONCAT(${first_name},' ',${TABLE}.last_name) ;;
   }
 
   dimension: first_name {
