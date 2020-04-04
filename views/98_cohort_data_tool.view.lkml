@@ -47,7 +47,7 @@ view: cohort_size {
     sql: SELECT
       CASE
         WHEN {% parameter cohort_filter %} = 'User Signup Month'
-          THEN DATE_TRUNC(date(users.created_at), MONTH)
+          THEN cast(DATE_TRUNC(date(users.created_at), MONTH) as string)
         WHEN {% parameter cohort_filter %} = 'Gender'
           THEN users.gender
         WHEN {% parameter cohort_filter %} = 'Traffic Source'
@@ -66,7 +66,7 @@ view: cohort_size {
               WHEN users.age  >= 70 THEN '70 or Above'
               ELSE 'Undefined'
             END)
-      ELSE DATE_TRUNC(date(users.created_at), MONTH)
+      ELSE cast(DATE_TRUNC(date(users.created_at), MONTH) as string)
       END AS cohort,
       COUNT(DISTINCT users.id ) AS cohort_size
       FROM ecomm.users AS users
