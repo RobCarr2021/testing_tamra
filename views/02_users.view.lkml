@@ -111,10 +111,9 @@ view: users {
     sql: ${TABLE}.zip ;;
   }
 
-  ##### Need to fix this - Bruce
   dimension: uk_postcode {
     label: "UK Postcode"
-    sql: CASE WHEN ${TABLE}.country = 'UK' THEN TRANSLATE(SUBSTR(${zip},1,2),'0123456789','') END ;;
+    sql: case when ${TABLE}.country = 'UK' then regexp_replace(${zip}, '[0-9]', '') else null end;;
     map_layer_name: uk_postcode_areas
     drill_fields: [city, zip]
   }
