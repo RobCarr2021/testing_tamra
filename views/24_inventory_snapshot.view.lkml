@@ -3,21 +3,19 @@ view: inventory_snapshot {
     datagroup_trigger: ecommerce_etl
     sql: with calendar as
       (
-      select distinct to_date(created_at) as snapshot_date
+      select distinct created_at as snapshot_date
         from ecomm.inventory_items
-      -- where dateadd('day',90,created_at)>=current_date
       )
+
       select
         inventory_items.product_id
         ,calendar.snapshot_date
         ,count(*) as number_in_stock
       from ecomm.inventory_items
-        left join calendar
+         join calendar
           on inventory_items.created_at <= calendar.snapshot_date
           and (date(inventory_items.sold_at) >= calendar.snapshot_date OR inventory_items.sold_at is null)
-        -- where dateadd('day',90,calendar.snapshot_date)>=current_date
-        group by 1,2
-       ;;
+        group by 1,2;;
   }
 
   dimension: product_id {

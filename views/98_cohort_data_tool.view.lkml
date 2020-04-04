@@ -182,6 +182,7 @@ view: cohort_size {
           WHEN ${metric_name} = 'User Retention' THEN '%'
           WHEN ${metric_name} = 'Average Spend per User' THEN '$'
           WHEN ${metric_name} = 'Cumulative Spend' THEN '$'
+          ELSE NULL
         END ;;
   }
 }
@@ -199,6 +200,6 @@ view: order_items_cohorts {
     view_label: "Order Items"
     description: "Months an order occurred since the user first signed up"
     type: number
-    sql: DATE_DIFF(${users.created_raw}, ${created_raw}, MONTH) ;;
+    sql: TIMESTAMP_DIFF(${users.created_raw}, ${created_raw}, MONTH) ;;
   }
 }

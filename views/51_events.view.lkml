@@ -67,7 +67,7 @@ view: events {
   }
 
   dimension: full_page_url {
-    sql: ${TABLE}."uri" ;;
+    sql: ${TABLE}.uri ;;
   }
 
   dimension: viewed_product_id {
