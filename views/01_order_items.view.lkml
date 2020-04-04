@@ -341,58 +341,58 @@ view: order_items {
 
 ########## Dynamic Sales Cohort App ##########
 
-  filter: cohort_by {
-    type: string
-    hidden: yes
-    suggestions: ["Week", "Month", "Quarter", "Year"]
-  }
-
-  filter: metric {
-    type: string
-    hidden: yes
-    suggestions: ["Order Count", "Gross Margin", "Total Sales", "Unique Users"]
-  }
-
-  dimension_group: first_order_period {
-    type: time
-    timeframes: [date]
-    hidden: yes
-    sql: CAST(DATE_TRUNC({% parameter cohort_by %}, ${user_order_facts.first_order_date}) AS TIMESTAMP)
-      ;;
-  }
-
-  dimension: periods_as_customer {
-    type: number
-    hidden: yes
-    sql: TIMESTAMP_DIFF(${user_order_facts.first_order_date}, ${user_order_facts.latest_order_date}, {% parameter cohort_by %})
-      ;;
-  }
-
-  measure: cohort_values_0 {
-    type: count_distinct
-    hidden: yes
-    sql: CASE WHEN {% parameter metric %} = 'Order Count' THEN ${id}
-        WHEN {% parameter metric %} = 'Unique Users' THEN ${users.id}
-        ELSE null
-      END
-       ;;
-  }
-
-  measure: cohort_values_1 {
-    type: sum
-    hidden: yes
-    sql: CASE WHEN {% parameter metric %} = 'Gross Margin' THEN ${gross_margin}
-        WHEN {% parameter metric %} = 'Total Sales' THEN ${sale_price}
-        ELSE 0
-      END
-       ;;
-  }
-
-  measure: values {
-    type: number
-    hidden: yes
-    sql: ${cohort_values_0} + ${cohort_values_1} ;;
-  }
+#   filter: cohort_by {
+#     type: string
+#     hidden: yes
+#     suggestions: ["Week", "Month", "Quarter", "Year"]
+#   }
+#
+#   filter: metric {
+#     type: string
+#     hidden: yes
+#     suggestions: ["Order Count", "Gross Margin", "Total Sales", "Unique Users"]
+#   }
+#
+#   dimension_group: first_order_period {
+#     type: time
+#     timeframes: [date]
+#     hidden: yes
+#     sql: CAST(DATE_TRUNC({% parameter cohort_by %}, ${user_order_facts.first_order_date}) AS TIMESTAMP)
+#       ;;
+#   }
+#
+#   dimension: periods_as_customer {
+#     type: number
+#     hidden: yes
+#     sql: TIMESTAMP_DIFF(${user_order_facts.first_order_date}, ${user_order_facts.latest_order_date}, {% parameter cohort_by %})
+#       ;;
+#   }
+#
+#   measure: cohort_values_0 {
+#     type: count_distinct
+#     hidden: yes
+#     sql: CASE WHEN {% parameter metric %} = 'Order Count' THEN ${id}
+#         WHEN {% parameter metric %} = 'Unique Users' THEN ${users.id}
+#         ELSE null
+#       END
+#        ;;
+#   }
+#
+#   measure: cohort_values_1 {
+#     type: sum
+#     hidden: yes
+#     sql: CASE WHEN {% parameter metric %} = 'Gross Margin' THEN ${gross_margin}
+#         WHEN {% parameter metric %} = 'Total Sales' THEN ${sale_price}
+#         ELSE 0
+#       END
+#        ;;
+#   }
+#
+#   measure: values {
+#     type: number
+#     hidden: yes
+#     sql: ${cohort_values_0} + ${cohort_values_1} ;;
+#   }
 
 ########## Sets ##########
 

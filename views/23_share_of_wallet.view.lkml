@@ -35,7 +35,7 @@ view: order_items_share_of_wallet {
       WHEN {% condition item_name %} rtrim(ltrim(products.item_name)) {% endcondition %}
       THEN concat('(1) ',${products.item_name})
       WHEN  {% condition brand %} rtrim(ltrim(products.brand)) {% endcondition %}
-      THEN concat('(2) Rest of , ${products.brand})
+      THEN concat('(2) Rest of ', ${products.brand})
       ELSE '(3) Rest of Population'
       END
        ;;
