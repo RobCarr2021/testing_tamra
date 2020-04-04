@@ -1,5 +1,6 @@
 view: users {
   sql_table_name: ecomm.users ;;
+
   ## Demographics ##
 
   dimension: id {
@@ -11,16 +12,17 @@ view: users {
 
   dimension: first_name {
     hidden: yes
-    sql: INITCAP(${TABLE}.first_name) ;;
+    sql: CONCAT(UPPER(SUBSTR(${TABLE}.first_name,1,1)), LOWER(SUBSTR(${TABLE}.first_name,2))) ;;
+
   }
 
   dimension: last_name {
     hidden: yes
-    sql: INITCAP(${TABLE}.last_name) ;;
+    sql: CONCAT(UPPER(SUBSTR(${TABLE}.last_name,1,1)), LOWER(SUBSTR(${TABLE}.last_name,2))) ;;
   }
 
   dimension: name {
-    sql: ${first_name} || ' ' || ${last_name} ;;
+    sql: concat(${first_name}, ' ', ${last_name}) ;;
   }
 
   dimension: age {
@@ -40,21 +42,21 @@ view: users {
   }
 
   dimension: gender_short {
-    sql: LOWER(LEFT(${gender},1)) ;;
+    sql: LOWER(SUBSTR(${gender},1,1)) ;;
   }
 
   dimension: user_image {
     sql: ${image_file} ;;
-    html: <img src="{{ value }}" width="128" height="128"/>;;
+    html: <img src="{{ value }}" width="220" height="220"/>;;
   }
 
   dimension: email {
     sql: ${TABLE}.email ;;
-    tags: ["email", "mp_email"]
+    tags: ["email"]
 
     link: {
       label: "User Lookup Dashboard"
-      url: "http://demo.looker.com/dashboards/160?Email={{ value | encode_uri }}"
+      url: "/dashboards/thelook_event::customer_lookup?Email={{ value | encode_uri }}"
       icon_url: "http://www.looker.com/favicon.ico"
     }
     action: {
@@ -88,7 +90,7 @@ view: users {
 
   dimension: image_file {
     hidden: yes
-    sql: ('https://randomuser.me/api/portraits/' || CASE WHEN ${gender_short} = 'm' THEN 'men' ELSE 'women' END || '/' || RIGHT(${id},1) || '.jpg' ) ;;
+    sql: concat('https://docs.looker.com/assets/images/',${gender_short},'.jpg') ;;
   }
 
   ## Demographics ##
@@ -109,9 +111,10 @@ view: users {
     sql: ${TABLE}.zip ;;
   }
 
+  ##### Need to fix this - Bruce
   dimension: uk_postcode {
     label: "UK Postcode"
-    sql: CASE WHEN ${TABLE}.country = 'UK' THEN TRANSLATE(LEFT(${zip},2),'0123456789','') END ;;
+    sql: CASE WHEN ${TABLE}.country = 'UK' THEN TRANSLATE(SUBSTR(${zip},1,2),'0123456789','') END ;;
     map_layer_name: uk_postcode_areas
     drill_fields: [city, zip]
   }
@@ -125,48 +128,18 @@ view: users {
        ;;
   }
 
-  dimension: latitude {
-    sql: ${TABLE}.latitude ;;
-    hidden: yes
-  }
-
-  dimension: longitude {
-    sql: ${TABLE}.longitude ;;
-    hidden: yes
-  }
-
   dimension: location {
     type: location
     sql_latitude: ${TABLE}.latitude ;;
     sql_longitude: ${TABLE}.longitude ;;
   }
 
-  dimension: approx_latitude {
-    type: number
-    sql: round(${TABLE}.latitude,1) ;;
-    hidden: yes
-  }
-
-  dimension: approx_longitude {
-    type: number
-    sql: round(${TABLE}.longitude,1) ;;
-    hidden: yes
-  }
-
-
-
   dimension: approx_location {
     type: location
     drill_fields: [location]
     sql_latitude: round(${TABLE}.latitude,1) ;;
     sql_longitude: round(${TABLE}.longitude,1) ;;
-    link: {
-      label: "Google Directions from {{ distribution_centers.name._value }}"
-      url: "{% if distribution_centers.location._in_query %}https://www.google.com/maps/dir/'{{ distribution_centers.latitude._value }},{{ distribution_centers.longitude._value }}'/'{{ approx_latitude._value }},{{ approx_longitude._value }}'{% endif %}"
-      icon_url: "http://www.google.com/s2/favicons?domain=www.google.com"
-    }
   }
-
 
   ## Other User Information ##
 
@@ -178,7 +151,7 @@ view: users {
 
   dimension: history {
     sql: ${TABLE}.id ;;
-    html: <a href="/explore/thelook/order_items?fields=order_items.detail*&f[users.id]={{ value }}">Order History</a>
+    html: <a href="/explore/thelook_event/order_items?fields=order_items.detail*&f[users.id]={{ value }}">Order History</a>
       ;;
   }
 
@@ -200,7 +173,7 @@ view: users {
     sql:
           CASE  WHEN '{{_user_attributes["can_see_sensitive_data"]}}' = 'yes'
                 THEN ${ssn}
-                ELSE MD5(${ssn}||'salt')
+                ELSE MD5(CONCAT(${ssn}, 'salt'))
           END;;
     html:
           {% if _user_attributes["can_see_sensitive_data"]  == 'yes' %}
@@ -231,17 +204,7 @@ view: users {
     drill_fields: [detail*]
   }
 
-  dimension: test_group {
-    case: {
-      when: {
-        label: "Treatment"
-        sql: ${id} % 2 = 0 ;;
-      }
-      else: "Control"
-    }
-  }
-
   set: detail {
-    fields: [id, name, email, age, created_date,traffic_source , orders.count, order_items.count]
+    fields: [id, name, email, age, created_date, orders.count, order_items.count]
   }
 }

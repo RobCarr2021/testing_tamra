@@ -4,24 +4,21 @@ view: inventory_snapshot {
     sql: with calendar as
       (
       select distinct to_date(created_at) as snapshot_date
-      from ecomm.inventory_items
+        from ecomm.inventory_items
       -- where dateadd('day',90,created_at)>=current_date
       )
-
       select
-      inventory_items.product_id
-      ,calendar.snapshot_date
-      ,count(*) as number_in_stock
+        inventory_items.product_id
+        ,calendar.snapshot_date
+        ,count(*) as number_in_stock
       from ecomm.inventory_items
-      left join calendar
-      on inventory_items.created_at <= calendar.snapshot_date
-      and (inventory_items.sold_at >= calendar.snapshot_date OR inventory_items.sold_at is null)
-      -- where dateadd('day',90,calendar.snapshot_date)>=current_date
-      group by 1,2
+        left join calendar
+          on inventory_items.created_at <= calendar.snapshot_date
+          and (date(inventory_items.sold_at) >= calendar.snapshot_date OR inventory_items.sold_at is null)
+        -- where dateadd('day',90,calendar.snapshot_date)>=current_date
+        group by 1,2
        ;;
   }
-
-
 
   dimension: product_id {
     type: number
@@ -60,7 +57,6 @@ view: inventory_snapshot {
     }
   }
 
-
   measure: sum_stock_last_wk {
     type: sum
     hidden: yes
@@ -78,7 +74,6 @@ view: inventory_snapshot {
     value_format_name: decimal_2
   }
 
-
   measure: stock_coverage_ratio_last_wk {
     type: number
     view_label: "Stock Ratio Changes"
@@ -93,7 +88,6 @@ view: inventory_snapshot {
     value_format_name: decimal_1
 #     value_format: "# 'bp'"
   }
-
 
   set: detail {
     fields: [product_id, snapshot_date, number_in_stock]

@@ -7,19 +7,16 @@ include: "/views/**/*.view" # include all the views
 explore: data_tool {
   hidden: yes
   label: "Web Analytics Data Tool"
-
   join: sessions {
     from: sessions_webanalytics
     fields: [sessions.session_id, sessions.session_start_date, sessions.is_bounce_session, sessions.count_purchase, session_end_date, sessions.duration, sessions.duration_seconds_tier, sessions.average_duration, sessions.count, sessions.count_bounce_sessions, sessions.percent_bounce_sessions, sessions.overall_conversion, sessions.furthest_funnel_step]
     sql_on: ${data_tool.session_id} =  ${sessions.session_id} ;;
     relationship: many_to_one
   }
-
   join: users {
     sql_on: ${sessions.session_user_id} = ${users.id} ;;
     relationship: many_to_one
   }
-
   join: user_order_facts {
     sql_on: ${users.id} = ${user_order_facts.user_id} ;;
     relationship: one_to_one
@@ -37,33 +34,6 @@ explore: data_tool {
 view: data_tool {
   extends: [events]
   view_label: "Events"
-
-  filter: previous_period_filter {
-    view_label: "Data Tool"
-    type: date
-    description: "Use this filter for period analysis"
-    sql: ${previous_period} IS NOT NULL ;;
-  }
-
-  dimension: previous_period  {
-    view_label: "Data Tool"
-    type: string
-    description: "The reporting period as selected by the Previous Period Filter"
-    sql:
-      CASE
-        WHEN {% date_start previous_period_filter %} is not null AND {% date_end previous_period_filter %} is not null /* date ranges or in the past x days */
-          THEN
-            CASE
-              WHEN ${event_raw} >=  {% date_start previous_period_filter %}
-                AND ${event_raw}  < {% date_end previous_period_filter %}
-                THEN 'This Period'
-              WHEN ${event_raw}  >= DATEADD(day,-1*DATEDIFF('day',{% date_start previous_period_filter %}, {% date_end previous_period_filter %} ), DATEADD(day,-1,{% date_start previous_period_filter %} ) )
-                AND ${event_raw}  < DATEADD(day,-1,{% date_start previous_period_filter %} )
-                THEN 'Previous Period'
-            END
-          END ;;
-  }
-
   parameter: timeframe_filter {
     view_label: "Data Tool"
     allowed_value: { value: "Date" }
@@ -74,14 +44,13 @@ view: data_tool {
   dimension: timeframe {
     view_label: "Data Tool"
     sql: CASE
-            WHEN {% parameter timeframe_filter %} = 'Date' THEN ${event_date}::varchar
-            WHEN {% parameter timeframe_filter %} = 'Week' THEN ${event_week}
-            WHEN {% parameter timeframe_filter %} = 'Month' THEN ${event_month}
-          END ;;
+          WHEN {% parameter timeframe_filter %} = 'Date' THEN ${event_date}::varchar
+          WHEN {% parameter timeframe_filter %} = 'Week' THEN ${event_week}
+          WHEN {% parameter timeframe_filter %} = 'Month' THEN ${event_month}
+        END ;;
     label_from_parameter: timeframe_filter
     drill_fields: [os, browser, event_type]
   }
-
 
   parameter: primary_metric_filter {
     view_label: "Data Tool"
@@ -92,21 +61,15 @@ view: data_tool {
     default_value: "Users"
   }
 
-  dimension: primary_metric_label {
-    view_label: "Data Tool"
-    type: string
-    sql: {% parameter primary_metric_filter %} ;;
-  }
-
   measure: primary_metric {
     type: number
     view_label: "Data Tool"
     sql: CASE
-            WHEN {% parameter primary_metric_filter %} = 'Users' THEN ${users.count}
-            WHEN {% parameter primary_metric_filter %} = 'Visitors' THEN ${unique_visitors}
-            WHEN {% parameter primary_metric_filter %} = 'Sessions' THEN ${sessions.count}
-            WHEN {% parameter primary_metric_filter %} = 'Orders' THEN ${sessions.count_purchase}
-          END ;;
+          WHEN {% parameter primary_metric_filter %} = 'Users' THEN ${users.count}
+          WHEN {% parameter primary_metric_filter %} = 'Visitors' THEN ${unique_visitors}
+          WHEN {% parameter primary_metric_filter %} = 'Sessions' THEN ${sessions.count}
+          WHEN {% parameter primary_metric_filter %} = 'Orders' THEN ${sessions.count_purchase}
+        END ;;
     label_from_parameter: primary_metric_filter
     drill_fields: [detail*]
   }
@@ -119,62 +82,22 @@ view: data_tool {
     default_value: "Conversion Rate"
   }
 
-  dimension: second_metric_label {
-    view_label: "Data Tool"
-    type: string
-    sql: {% parameter second_metric_filter %} ;;
-  }
-
   measure: second_metric {
     type: number
     view_label: "Data Tool"
     sql: CASE
-            WHEN {% parameter second_metric_filter %} = 'Bounces' THEN ${sessions.count_bounce_sessions}
-            WHEN {% parameter second_metric_filter %} = 'Bounce Rate' THEN round((100.0 * ${sessions.percent_bounce_sessions}),2)
-            WHEN {% parameter second_metric_filter %} = 'Conversion Rate' THEN round((100.0 * ${sessions.conversion_rate}),2)
-          END ;;
+          WHEN {% parameter second_metric_filter %} = 'Bounces' THEN ${sessions.count_bounce_sessions}
+          WHEN {% parameter second_metric_filter %} = 'Bounce Rate' THEN round((100.0 * ${sessions.percent_bounce_sessions}),2)
+          WHEN {% parameter second_metric_filter %} = 'Conversion Rate' THEN round((100.0 * ${sessions.conversion_rate}),2)
+        END ;;
     html: {% if metric_name._value contains 'Rate' or metric_name._value contains 'Users'  %}
-              {{ linked_value }}{{ format_symbol._value }}
-            {% else %}
-              {{ format_symbol._value }}{{ linked_value }}
-            {% endif %} ;;
+            {{ linked_value }}{{ format_symbol._value }}
+          {% else %}
+            {{ format_symbol._value }}{{ linked_value }}
+          {% endif %} ;;
     label_from_parameter: second_metric_filter
     drill_fields: [detail*]
   }
-
-  parameter: size_by_filter {
-    view_label: "Data Tool"
-    allowed_value: { value: "Users" }
-    allowed_value: { value: "Visitors" }
-    allowed_value: { value: "Sessions" }
-    allowed_value: { value: "Orders" }
-    allowed_value: { value: "Bounces" }
-    allowed_value: { value: "Bounce Rate" }
-    allowed_value: { value: "Conversion Rate" }
-    default_value: "Users"
-  }
-
-  measure: size_by_metric {
-    type: number
-    view_label: "Data Tool"
-    sql: CASE
-          WHEN {% parameter size_by_filter %} = 'Users' THEN ${users.count}
-          WHEN {% parameter size_by_filter %} = 'Visitors' THEN ${unique_visitors}
-          WHEN {% parameter size_by_filter %} = 'Sessions' THEN ${sessions.count}
-          WHEN {% parameter size_by_filter %} = 'Orders' THEN ${sessions.count_purchase}
-          WHEN {% parameter size_by_filter %} = 'Bounces' THEN ${sessions.count_bounce_sessions}
-          WHEN {% parameter size_by_filter %} = 'Bounce Rate' THEN round((100.0 * ${sessions.percent_bounce_sessions}),2)
-          WHEN {% parameter size_by_filter %} = 'Conversion Rate' THEN round((100.0 * ${sessions.conversion_rate}),2)
-        END ;;
-    label_from_parameter: size_by_filter
-  }
-
-  dimension: size_by_metric_label {
-    view_label: "Data Tool"
-    type: string
-    sql: {% parameter size_by_filter %} ;;
-  }
-
 
   set: detail {
     fields: [
@@ -188,8 +111,6 @@ view: data_tool {
       sessions.orders
     ]
   }
-
-
 
 
 ################################################################
@@ -214,14 +135,7 @@ view: data_tool {
           WHEN ${metric_name} IN ('Bounce Rate','Conversion Rate','% New Users') THEN '%'
         END ;;
   }
-
-
-
 }
-
-
-
-
 
 
 ################################################################
@@ -230,7 +144,6 @@ view: data_tool {
 
 view: sessions_webanalytics {
   extends: [sessions]
-
   measure: conversion_rate {
     view_label: "Sessions"
     type: number

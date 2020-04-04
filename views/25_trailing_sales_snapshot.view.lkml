@@ -8,21 +8,18 @@ view: trailing_sales_snapshot {
       )
 
       select
-
-
-      inventory_items.product_id
-      ,to_date(order_items.created_at) as snapshot_date
-      ,count(*) as trailing_28d_sales
-
+        inventory_items.product_id
+        ,to_date(order_items.created_at) as snapshot_date
+        ,count(*) as trailing_28d_sales
       from ecomm.order_items
-      left join ecomm.inventory_items on order_items.inventory_item_id = inventory_items.id
-      left join calendar
-      on order_items.created_at <= dateadd('day',28,calendar.snapshot_date)
-      and order_items.created_at >= calendar.snapshot_date
+      left join ecomm.inventory_items
+        on order_items.inventory_item_id = inventory_items.id
+      left  join calendar
+        on order_items.created_at <= timestamp_add(calendar.snapshot_date, interval 28 day)
+        and order_items.created_at >= calendar.snapshot_date
       -- where dateadd('day',90,calendar.snapshot_date)>=current_date
       group by 1,2
-
- ;;
+    ;;
   }
 
 #   measure: count {
@@ -60,7 +57,6 @@ view: trailing_sales_snapshot {
       value: "yesterday"
     }
   }
-
 
   measure: sum_trailing_28d_sales_last_wk {
     type: sum
