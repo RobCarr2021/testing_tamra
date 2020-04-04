@@ -44,7 +44,7 @@ view: data_tool {
   dimension: timeframe {
     view_label: "Data Tool"
     sql: CASE
-          WHEN {% parameter timeframe_filter %} = 'Date' THEN ${event_date}::varchar
+          WHEN {% parameter timeframe_filter %} = 'Date' THEN cast(${event_date} as string)
           WHEN {% parameter timeframe_filter %} = 'Week' THEN ${event_week}
           WHEN {% parameter timeframe_filter %} = 'Month' THEN ${event_month}
         END ;;

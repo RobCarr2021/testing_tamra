@@ -160,27 +160,20 @@ view: users {
   }
 
   dimension: ssn {
-    # dummy field used in next dim
+    # dummy field used in next dim, generate 4 random numbers to be the last 4 digits
     hidden: yes
-    type: number
-    sql: lpad(cast(round(random() * 10000, 0) as char(4)), 4, '0') ;;
+    type: string
+    sql: CONCAT(CAST(FLOOR(10*RAND()) AS INT64),CAST(FLOOR(10*RAND()) AS INT64),
+                CAST(FLOOR(10*RAND()) AS INT64),CAST(FLOOR(10*RAND()) AS INT64));;
   }
 
   dimension: ssn_last_4 {
     label: "SSN Last 4"
     description: "Only users with sufficient permissions will see this data"
     type: string
-    sql:
-          CASE  WHEN '{{_user_attributes["can_see_sensitive_data"]}}' = 'yes'
+    sql: CASE WHEN '{{_user_attributes["can_see_sensitive_data"]}}' = 'Yes'
                 THEN ${ssn}
-                ELSE MD5(CONCAT(${ssn}, 'salt'))
-          END;;
-    html:
-          {% if _user_attributes["can_see_sensitive_data"]  == 'yes' %}
-          {{ value }}
-          {% else %}
-            ####
-          {% endif %}  ;;
+                ELSE '####' END;;
   }
 
   ## MEASURES ##

@@ -6,10 +6,10 @@ view: sessions {
         , CAST(MIN(created_at) AS TIMESTAMP) AS session_start
         , CAST(MAX(created_at) AS TIMESTAMP) AS session_end
         , COUNT(*) AS number_of_events_in_session
-        , SUM(CASE WHEN event_type IN ('Category','Brand') THEN 1 END) AS browse_events
-        , SUM(CASE WHEN event_type = 'Product' THEN 1 END) AS product_events
-        , SUM(CASE WHEN event_type = 'Cart' THEN 1 END) AS cart_events
-        , SUM(CASE WHEN event_type = 'Purchase' THEN 1 end) AS purchase_events
+        , SUM(CASE WHEN event_type IN ('Category','Brand') THEN 1 ELSE NULL END) AS browse_events
+        , SUM(CASE WHEN event_type = 'Product' THEN 1 ELSE NULL END) AS product_events
+        , SUM(CASE WHEN event_type = 'Cart' THEN 1 ELSE NULL END) AS cart_events
+        , SUM(CASE WHEN event_type = 'Purchase' THEN 1 ELSE NULL end) AS purchase_events
         , CAST(MAX(user_id) AS INT64)  AS session_user_id
         , MIN(id) AS landing_event_id
         , MAX(id) AS bounce_event_id
@@ -231,7 +231,6 @@ view: sessions {
       field: furthest_funnel_step
       value: "(5) Purchase"
     }
-
     drill_fields: [detail*]
   }
 

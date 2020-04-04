@@ -25,7 +25,7 @@ view: inventory_snapshot {
 
   dimension: snapshot_date {
     type: date
-    sql: ${TABLE}.snapshot_date ;;
+    sql:  cast(${TABLE}.snapshot_date as timestamp) ;;
   }
 
   dimension: number_in_stock {

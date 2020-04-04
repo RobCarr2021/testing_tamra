@@ -200,6 +200,6 @@ view: order_items_cohorts {
     view_label: "Order Items"
     description: "Months an order occurred since the user first signed up"
     type: number
-    sql: TIMESTAMP_DIFF(${users.created_raw}, ${created_raw}, MONTH) ;;
+    sql: DATE_DIFF(date(${users.created_raw}), date(${created_raw}), MONTH) ;;
   }
 }
