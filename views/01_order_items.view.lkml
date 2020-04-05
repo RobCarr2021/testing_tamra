@@ -68,7 +68,7 @@ view: order_items {
       url: "https://hooks.zapier.com/hooks/catch/1662138/tvc3zj/"
       param: {
         name: "user_dash_link"
-        value: "/dashboards/thelook_event::customer_lookup?Email={{ users.email._value}}"
+        value: "/dashboards/ayalascustomerlookupdb?Email={{ users.email._value}}"
       }
       form_param: {
         name: "Message"
@@ -103,6 +103,45 @@ view: order_items {
           name: "general"
           label: "General"
         }
+      }
+    }
+    action: {
+      label: "Create Order Form"
+      url: "https://hooks.zapier.com/hooks/catch/2813548/oosxkej/"
+      form_param: {
+        name: "Order ID"
+        type: string
+        default: "{{ order_id._value }}"
+      }
+
+      form_param: {
+        name: "Name"
+        type: string
+        default: "{{ users.name._value }}"
+      }
+
+      form_param: {
+        name: "Email"
+        type: string
+        default: "{{ _user_attributes.email }}"
+      }
+
+      form_param: {
+        name: "Item"
+        type: string
+        default: "{{ products.item_name._value }}"
+      }
+
+      form_param: {
+        name: "Price"
+        type: string
+        default: "{{ order_items.sale_price._rendered_value }}"
+      }
+
+      form_param: {
+        name: "Comments"
+        type: string
+        default: " Hi {{ users.first_name._value }}, thanks for your business!"
       }
     }
   }
