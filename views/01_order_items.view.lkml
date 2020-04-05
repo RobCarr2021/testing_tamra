@@ -68,7 +68,7 @@ view: order_items {
       url: "https://hooks.zapier.com/hooks/catch/1662138/tvc3zj/"
       param: {
         name: "user_dash_link"
-        value: "/dashboards/thelook_event::customer_lookup?Email={{ users.email._value}}"
+        value: "/dashboards/ayalascustomerlookupdb?Email={{ users.email._value}}"
       }
       form_param: {
         name: "Message"
