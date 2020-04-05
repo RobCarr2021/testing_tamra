@@ -56,7 +56,7 @@ view: users {
 
     link: {
       label: "User Lookup Dashboard"
-      url: "/dashboards/thelook_event::customer_lookup?Email={{ value | encode_uri }}"
+      url: "/dashboards/ayalascustomerlookupdb?Email={{ value | encode_uri }}"
       icon_url: "http://www.looker.com/favicon.ico"
     }
     action: {
@@ -138,6 +138,12 @@ view: users {
     drill_fields: [location]
     sql_latitude: round(${TABLE}.latitude,1) ;;
     sql_longitude: round(${TABLE}.longitude,1) ;;
+    link: {
+      label: "Google Directions from {{ distribution_centers.name._value }}"
+      url: "{% if distribution_centers.location._in_query %}https://www.google.com/maps/dir/'{{ distribution_centers.latitude._value }},{{ distribution_centers.longitude._value }}'/'{{ approx_latitude._value }},{{ approx_longitude._value }}'{% endif %}"
+      icon_url: "http://www.google.com/s2/favicons?domain=www.google.com"
+    }
+
   }
 
   ## Other User Information ##
