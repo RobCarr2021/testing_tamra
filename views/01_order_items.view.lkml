@@ -358,6 +358,11 @@ view: order_items {
     sql: ${days_until_next_order} <= 30 ;;
   }
 
+  dimension: repeat_orders_within_15d{
+    type: yesno
+    sql:  ${days_until_next_order} <= 15;;
+  }
+
   measure: count_with_repeat_purchase_within_30d {
     type: count_distinct
     sql: ${id} ;;
