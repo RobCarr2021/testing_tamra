@@ -218,6 +218,11 @@ view: order_items {
        ;;
   }
 
+  dimension: days_to_process_over_three{
+    type: yesno
+    sql: ${days_to_process} > 3 ;;
+  }
+
   dimension: shipping_time {
     type: number
     sql: TIMESTAMP_DIFF(${delivered_raw}, ${shipped_raw}, DAY)*1.0 ;;
