@@ -1,5 +1,5 @@
 connection: "looker-private-demo"
-label: "1) eCommerce with Event Data"
+label: " eCommerce"
 include: "/views/**/*.view" # include all the views
 include: "/dashboards/*.dashboard.lookml" # include all the views
 
