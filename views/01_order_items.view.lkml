@@ -223,13 +223,15 @@ view: order_items {
     sql: ${days_to_process} > 3;;
   }
 
-#   measure: count_of_over_three {
-#     type: count
-#     filters:
-#     {field:days_to_process_over_3
-#       value: "yes"
-#     }
-#   }
+  measure: count_of_over_three {
+    type: count
+    filters:
+    {field: days_over_three_to_process
+      value: "yes"
+    }
+    drill_fields: [user_id, users.name, users.email, order_id, created_date, users.traffic_source]
+
+  }
 
   dimension: shipping_time {
     type: number
