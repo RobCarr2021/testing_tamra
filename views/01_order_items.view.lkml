@@ -218,18 +218,18 @@ view: order_items {
        ;;
   }
 
-  dimension: days_to_process_over_3 {
+  dimension: days_over_three_to_process {
     type: yesno
-    sql: ${days_to_process} > 3 ;;
+    sql: ${days_to_process} > 3;;
   }
 
-  measure: count_of_over_three {
-    type: count
-    filters:
-    {field:days_to_process_over_3
-      value: "yes"
-    }
-  }
+#   measure: count_of_over_three {
+#     type: count
+#     filters:
+#     {field:days_to_process_over_3
+#       value: "yes"
+#     }
+#   }
 
   dimension: shipping_time {
     type: number
