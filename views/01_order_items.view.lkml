@@ -252,7 +252,7 @@ view: order_items {
   dimension: item_gross_margin_percentage {
     type: number
     value_format_name: percent_2
-    sql: 1.0 * ${gross_margin}/(CASE WHEN ${sale_price} = 0 THEN NULL ELSE ${sale_price} END) ;;
+    sql: 1.0 * ${gross_margin}/nullif(0,${sale_price}) ;;
   }
 
   dimension: item_gross_margin_percentage_tier {
