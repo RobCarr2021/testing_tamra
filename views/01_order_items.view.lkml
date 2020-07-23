@@ -218,6 +218,7 @@ view: order_items {
        ;;
   }
 
+
   dimension: shipping_time {
     type: number
     sql: TIMESTAMP_DIFF(${delivered_raw}, ${shipped_raw}, DAY)*1.0 ;;
@@ -356,6 +357,11 @@ view: order_items {
     type: yesno
     view_label: "Repeat Purchase Facts"
     sql: ${days_until_next_order} <= 30 ;;
+  }
+
+  dimension: repeat_orders_within_15d{
+    type: yesno
+    sql:  ${days_until_next_order} <= 15;;
   }
 
   measure: count_with_repeat_purchase_within_30d {
