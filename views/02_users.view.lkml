@@ -133,11 +133,21 @@ view: users {
     sql_longitude: ${TABLE}.longitude ;;
   }
 
+  dimension: approx_latitude {
+    type: number
+    sql: round(${TABLE}.latitude,1) ;;
+  }
+
+  dimension: approx_longitude {
+    type: number
+    sql:round(${TABLE}.longitude,1) ;;
+  }
+
   dimension: approx_location {
     type: location
     drill_fields: [location]
-    sql_latitude: round(${TABLE}.latitude,1) ;;
-    sql_longitude: round(${TABLE}.longitude,1) ;;
+    sql_latitude: ${approx_latitude} ;;
+    sql_longitude: ${approx_longitude} ;;
     link: {
       label: "Google Directions from {{ distribution_centers.name._value }}"
       url: "{% if distribution_centers.location._in_query %}https://www.google.com/maps/dir/'{{ distribution_centers.latitude._value }},{{ distribution_centers.longitude._value }}'/'{{ approx_latitude._value }},{{ approx_longitude._value }}'{% endif %}"
