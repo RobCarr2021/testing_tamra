@@ -30,6 +30,11 @@ view: users {
     sql: ${TABLE}.age ;;
   }
 
+  dimension: over_21 {
+    type: yesno
+    sql:  ${age} > 21;;
+  }
+
   dimension: age_tier {
     type: tier
     tiers: [0, 10, 20, 30, 40, 50, 60, 70]
