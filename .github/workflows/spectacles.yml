@@ -5,7 +5,7 @@ name: spectacles
 
 env:
   DEMO_NAME: Ecommerce
-  PROJECT_NAME: thelook_events
+  PROJECT_NAME: thelook_event
   HOST: demo
 on:
   pull_request:
