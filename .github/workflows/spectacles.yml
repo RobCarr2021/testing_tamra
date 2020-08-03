@@ -4,9 +4,9 @@
 name: spectacles
 
 env:
-  DEMO_NAME: Retail Banking
-  PROJECT_NAME: retail_banking
-  HOST: demoexpo
+  DEMO_NAME: Ecommerce
+  PROJECT_NAME: thelook_events
+  HOST: demo
 on:
   pull_request:
     branches: [ master ]
