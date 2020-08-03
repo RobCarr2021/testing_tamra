@@ -1,6 +1,5 @@
 - dashboard: brand_lookup
   title: Brand Lookup
-  description: 'Drill down dashboard linked on brand name, showing an overview of orders and web traffic for the filtered brand'
   layout: newspaper
   query_timezone: user_timezone
   embed_style:
@@ -9,6 +8,9 @@
     title_color: "#3a4245"
     show_filters_bar: true
     tile_text_color: "#3a4245"
+    tile_separator_color: "#faf3f3"
+    tile_border_radius: 5
+    show_tile_shadow: false
     text_tile_text_color: "#556d7a"
   elements:
   - title: Total Orders
@@ -44,8 +46,8 @@
     font_size: medium
     text_color: black
     note_state: expanded
-    note_display: above
-    note_text: ''
+    note_display: hover
+    note_text: I've added a note
     listen:
       Brand Name: products.brand
       Date: order_items.created_date
@@ -96,15 +98,12 @@
     colors: ["#64518A", "#8D7FB9", "#EA8A2F", "#F2B431", "#2DA5DE", "#57BEBE", "#7F7977",
       "#B2A898", "#494C52"]
     color_application:
-      collection_id: b43731d5-dc87-4a8e-b807-635bef3948e7
-      palette_id: fb7bb53e-b77b-4ab6-8274-9d420d3d73f3
+      collection_id: google
+      palette_id: google-categorical-0
       options:
         steps: 5
-    series_colors:
-      Search - events.count: "#72D16D"
-      Facebook - events.count: "#FBB555"
-      Email - events.count: "#75E2E2"
-      Organic - events.count: "#B1399E"
+        reverse: false
+    series_colors: {}
     show_view_names: true
     stacking: ''
     x_axis_gridlines: false
@@ -117,6 +116,7 @@
     show_x_axis_ticks: true
     x_axis_scale: auto
     show_null_labels: false
+    defaults_version: 1
     note_state: collapsed
     note_display: above
     note_text: ''
@@ -124,7 +124,7 @@
       Brand Name: product_viewed.brand
       Date: events.event_date
       State: users.state
-    row: 27
+    row: 28
     col: 14
     width: 10
     height: 11
@@ -141,27 +141,11 @@
     limit: 8
     column_limit: 50
     query_timezone: America/Los_Angeles
-    color_application:
-      collection_id: b43731d5-dc87-4a8e-b807-635bef3948e7
-      palette_id: fb7bb53e-b77b-4ab6-8274-9d420d3d73f3
-      options:
-        steps: 5
-        reverse: true
     x_axis_gridlines: false
     y_axis_gridlines: true
     show_view_names: false
-    y_axes: [{label: Total Added to Cart, maxValue: !!null '', minValue: !!null '',
-        orientation: left, showLabels: true, showValues: true, tickDensity: default,
-        tickDensityCustom: 5, type: linear, unpinAxis: false, valueFormat: !!null '',
-        series: [{id: sessions.count_cart_or_later, name: "(4) Add to Cart or later"}]},
-      {label: '', maxValue: !!null '', minValue: !!null '', orientation: right, showLabels: true,
-        showValues: true, tickDensity: default, tickDensityCustom: 5, type: linear,
-        unpinAxis: false, valueFormat: !!null '', series: [{id: sessions.overall_conversion,
-            name: Overall Conversion}, {id: sessions.cart_to_checkout_conversion,
-            name: Cart to Checkout Conversion}]}]
     show_y_axis_labels: true
     show_y_axis_ticks: true
-    y_axis_labels: [Cart to Checkout Conversion Percent, Total Added to Cart]
     y_axis_tick_density: default
     y_axis_tick_density_custom: 5
     show_x_axis_label: false
@@ -173,38 +157,54 @@
     trellis: ''
     stacking: ''
     limit_displayed_rows: false
-    hide_legend: false
     legend_position: center
-    colors: ["#64518A", "#8D7FB9"]
-    series_types:
-      sessions.cart_to_checkout_conversion: line
-      sessions.overall_conversion: line
     point_style: circle_outline
-    series_colors:
-      sessions.cart_to_checkout_conversion: "#3EB0D5"
-    series_labels:
-      sessions.cart_to_checkout_conversion: Cart to Checkout Conversion
-      sessions.overall_conversion: Overall Conversion
-      sessions.count_cart_or_later: "# of Add to Cart Events"
     show_value_labels: false
     label_density: 25
     x_axis_scale: auto
     y_axis_combined: false
-    y_axis_orientation: [right, left]
-    x_axis_label_rotation: -45
     ordering: none
-    label_rotation: 0
     show_null_labels: false
     show_totals_labels: false
     show_silhouette: false
     totals_color: "#808080"
+    color_application:
+      collection_id: google
+      palette_id: google-categorical-0
+      options:
+        steps: 5
+        reverse: false
+    y_axes: [{label: Total Added to Cart, maxValue: !!null '', minValue: !!null '',
+        orientation: left, showLabels: true, showValues: true, tickDensity: default,
+        tickDensityCustom: 5, type: linear, unpinAxis: false, valueFormat: !!null '',
+        series: [{id: sessions.count_cart_or_later, name: "(4) Add to Cart or later"}]},
+      {label: '', maxValue: !!null '', minValue: !!null '', orientation: right, showLabels: true,
+        showValues: true, tickDensity: default, tickDensityCustom: 5, type: linear,
+        unpinAxis: false, valueFormat: !!null '', series: [{id: sessions.overall_conversion,
+            name: Overall Conversion}, {id: sessions.cart_to_checkout_conversion,
+            name: Cart to Checkout Conversion}]}]
+    y_axis_labels: [Cart to Checkout Conversion Percent, Total Added to Cart]
+    hide_legend: false
+    colors: ["#64518A", "#8D7FB9"]
+    series_types:
+      sessions.cart_to_checkout_conversion: line
+      sessions.overall_conversion: line
+    series_colors: {}
+    series_labels:
+      sessions.cart_to_checkout_conversion: Cart to Checkout Conversion
+      sessions.overall_conversion: Overall Conversion
+      sessions.count_cart_or_later: "# of Add to Cart Events"
+    y_axis_orientation: [right, left]
+    x_axis_label_rotation: -45
+    label_rotation: 0
     show_null_points: true
     interpolation: linear
+    defaults_version: 1
     listen:
       Brand Name: product_viewed.brand
       Date: events.event_date
       State: users.state
-    row: 27
+    row: 28
     col: 0
     width: 14
     height: 6
@@ -245,7 +245,7 @@
       Brand Name: product_viewed.brand
       Date: events.event_date
       State: users.state
-    row: 41
+    row: 42
     col: 12
     width: 12
     height: 8
@@ -259,21 +259,14 @@
     sorts: [order_items.total_sale_price desc]
     limit: 500
     query_timezone: America/Los_Angeles
-    color_application:
-      collection_id: b43731d5-dc87-4a8e-b807-635bef3948e7
-      palette_id: fb7bb53e-b77b-4ab6-8274-9d420d3d73f3
-      options:
-        steps: 5
     x_axis_gridlines: false
     y_axis_gridlines: false
     show_view_names: false
     show_y_axis_labels: true
     show_y_axis_ticks: true
-    y_axis_labels: [Total Sale Amount, Average Selling Price]
     y_axis_tick_density: default
     y_axis_tick_density_custom: 5
     show_x_axis_label: false
-    x_axis_label: Order Date
     show_x_axis_ticks: true
     y_axis_scale_mode: linear
     x_axis_reversed: false
@@ -282,23 +275,29 @@
     trellis: ''
     stacking: ''
     limit_displayed_rows: false
-    hide_legend: true
     legend_position: center
-    colors: ["#F2B431", "#57BEBE"]
     point_style: none
-    series_colors:
-      order_items.total_sale_price: "#B1399E"
-      order_items.average_sale_price: "#72D16D"
     show_value_labels: false
     label_density: 25
     x_axis_scale: auto
     y_axis_combined: false
-    y_axis_orientation: [left, right]
     show_null_points: true
     interpolation: monotone
+    color_application:
+      collection_id: google
+      palette_id: google-categorical-0
+      options:
+        steps: 5
+    y_axis_labels: [Total Sale Amount, Average Selling Price]
+    x_axis_label: Order Date
+    hide_legend: true
+    colors: ["#F2B431", "#57BEBE"]
+    series_colors: {}
+    y_axis_orientation: [left, right]
     x_axis_datetime: true
     hide_points: true
     color_palette: Custom
+    defaults_version: 1
     note_state: collapsed
     note_display: hover
     note_text: ''
@@ -309,7 +308,7 @@
     row: 2
     col: 12
     width: 12
-    height: 6
+    height: 7
   - title: Top Purchasers of Brand
     name: Top Purchasers of Brand
     model: thelook
@@ -338,7 +337,7 @@
       Brand Name: products.brand
       Date: order_items.created_date
       State: users.state
-    row: 41
+    row: 42
     col: 0
     width: 12
     height: 8
@@ -355,12 +354,6 @@
     limit: 500
     column_limit: 50
     query_timezone: America/Los_Angeles
-    color_application:
-      collection_id: b43731d5-dc87-4a8e-b807-635bef3948e7
-      palette_id: fb7bb53e-b77b-4ab6-8274-9d420d3d73f3
-      options:
-        steps: 5
-        reverse: true
     x_axis_gridlines: false
     y_axis_gridlines: true
     show_view_names: false
@@ -377,17 +370,8 @@
     trellis: ''
     stacking: normal
     limit_displayed_rows: false
-    hidden_series: [Undefined]
     legend_position: center
-    colors: ["#2DA5DE", "#57BEBE", "#EA8A2F", "#F2B431", "#64518A", "#8D7FB9", "#7F7977",
-      "#B2A898", "#494C52"]
     point_style: none
-    series_colors:
-      5 to 9 - 5 - sessions.count: "#B1399E"
-      3 to 4 - 4 - sessions.count: "#72D16D"
-    series_labels:
-      '1': 1 Lifetime Purchase
-      1 - 2 - sessions.count: '1'
     show_value_labels: false
     label_density: 25
     x_axis_scale: auto
@@ -397,8 +381,22 @@
     show_totals_labels: false
     show_silhouette: false
     totals_color: "#808080"
+    color_application:
+      collection_id: google
+      palette_id: google-categorical-0
+      options:
+        steps: 5
+        reverse: false
+    hidden_series: [Undefined]
+    colors: ["#2DA5DE", "#57BEBE", "#EA8A2F", "#F2B431", "#64518A", "#8D7FB9", "#7F7977",
+      "#B2A898", "#494C52"]
+    series_colors: {}
+    series_labels:
+      '1': 1 Lifetime Purchase
+      1 - 2 - sessions.count: '1'
     show_null_points: true
     interpolation: linear
+    defaults_version: 1
     note_state: collapsed
     note_display: hover
     note_text: These are order totals by hour of day
@@ -406,7 +404,7 @@
       Brand Name: product_viewed.brand
       Date: events.event_date
       State: users.state
-    row: 33
+    row: 34
     col: 0
     width: 14
     height: 5
@@ -496,7 +494,7 @@
     series_types: {}
     listen:
       Brand Name: product_a.brand
-    row: 17
+    row: 18
     col: 0
     width: 14
     height: 8
@@ -572,7 +570,7 @@
     series_types: {}
     listen:
       Brand Name: product_a.brand
-    row: 17
+    row: 18
     col: 14
     width: 10
     height: 8
@@ -588,23 +586,9 @@
     sorts: [order_items.months_since_signup]
     limit: 500
     query_timezone: America/Los_Angeles
-    color_application:
-      collection_id: b43731d5-dc87-4a8e-b807-635bef3948e7
-      palette_id: fb7bb53e-b77b-4ab6-8274-9d420d3d73f3
-      options:
-        steps: 5
-        reverse: false
     x_axis_gridlines: false
     y_axis_gridlines: false
     show_view_names: false
-    y_axes: [{label: '', orientation: left, series: [{id: order_items_share_of_wallet.brand_share_of_wallet_within_company,
-            name: Brand Share of Wallet Within Company, axisId: order_items_share_of_wallet.brand_share_of_wallet_within_company}],
-        showLabels: true, showValues: true, unpinAxis: false, tickDensity: default,
-        tickDensityCustom: 5, type: linear}, {label: !!null '', orientation: right,
-        series: [{id: order_items_share_of_wallet.total_sale_price_brand_v2, name: Total
-              Sales - This Brand, axisId: order_items_share_of_wallet.total_sale_price_brand_v2}],
-        showLabels: true, showValues: true, unpinAxis: false, tickDensity: default,
-        tickDensityCustom: 5, type: linear}]
     show_y_axis_labels: true
     show_y_axis_ticks: true
     y_axis_tick_density: default
@@ -619,22 +603,35 @@
     stacking: ''
     limit_displayed_rows: false
     legend_position: center
-    series_types: {}
     point_style: none
-    series_colors:
-      order_items_share_of_wallet.total_sale_price_brand_v2: "#72D16D"
-      order_items_share_of_wallet.brand_share_of_wallet_within_company: "#3EB0D5"
     show_value_labels: false
     label_density: 25
     x_axis_scale: auto
     y_axis_combined: true
     show_null_points: true
     interpolation: monotone
+    color_application:
+      collection_id: google
+      palette_id: google-categorical-0
+      options:
+        steps: 5
+        reverse: false
+    y_axes: [{label: '', orientation: left, series: [{id: order_items_share_of_wallet.brand_share_of_wallet_within_company,
+            name: Brand Share of Wallet Within Company, axisId: order_items_share_of_wallet.brand_share_of_wallet_within_company}],
+        showLabels: true, showValues: true, unpinAxis: false, tickDensity: default,
+        tickDensityCustom: 5, type: linear}, {label: !!null '', orientation: right,
+        series: [{id: order_items_share_of_wallet.total_sale_price_brand_v2, name: Total
+              Sales - This Brand, axisId: order_items_share_of_wallet.total_sale_price_brand_v2}],
+        showLabels: true, showValues: true, unpinAxis: false, tickDensity: default,
+        tickDensityCustom: 5, type: linear}]
+    series_types: {}
+    series_colors: {}
+    defaults_version: 1
     listen:
       Brand Name: order_items_share_of_wallet.brand
       Date: order_items.created_date
       State: users.state
-    row: 8
+    row: 9
     col: 12
     width: 12
     height: 6
@@ -649,11 +646,6 @@
     limit: 500
     column_limit: 50
     query_timezone: user_timezone
-    color_application:
-      collection_id: b43731d5-dc87-4a8e-b807-635bef3948e7
-      palette_id: fb7bb53e-b77b-4ab6-8274-9d420d3d73f3
-      options:
-        steps: 5
     x_axis_gridlines: false
     y_axis_gridlines: true
     show_view_names: false
@@ -671,7 +663,6 @@
     stacking: normal
     limit_displayed_rows: false
     legend_position: center
-    series_types: {}
     point_style: none
     show_value_labels: false
     label_density: 25
@@ -682,6 +673,12 @@
     show_totals_labels: false
     show_silhouette: false
     totals_color: "#808080"
+    color_application:
+      collection_id: google
+      palette_id: google-categorical-0
+      options:
+        steps: 5
+    series_types: {}
     show_row_numbers: true
     truncate_column_names: false
     hide_totals: false
@@ -691,11 +688,12 @@
     conditional_formatting_ignored_fields: []
     conditional_formatting_include_totals: false
     conditional_formatting_include_nulls: false
+    defaults_version: 1
     listen: {}
     row: 5
     col: 0
     width: 12
-    height: 9
+    height: 10
   - name: "<span class='fa fa-dollar'> Brand Overview </span>"
     type: text
     title_text: "<span class='fa fa-dollar'> Brand Overview </span>"
@@ -710,7 +708,7 @@
     subtitle_text: What products and brands have the highest affinity?
     body_text: "**Recommended Action** Plan advertising campaign to recommend products\
       \ to users based on affinity"
-    row: 14
+    row: 15
     col: 0
     width: 24
     height: 3
@@ -718,7 +716,7 @@
     type: text
     title_text: "<span class='fa fa-laptop'> Web Analytics </span>"
     subtitle_text: How are users interacting with our website?
-    row: 25
+    row: 26
     col: 0
     width: 24
     height: 2
@@ -728,7 +726,7 @@
     subtitle_text: Who are our highest valued customers?
     body_text: "**Recommended Action** Explore from here to see what products a user\
       \ has purchased and include them in a targeted advertising campaign"
-    row: 38
+    row: 39
     col: 0
     width: 24
     height: 3
