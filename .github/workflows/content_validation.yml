@@ -1,7 +1,7 @@
 name: content_validate
 env:
   DEMO_NAME: Ecommerce
-  PROJECT_NAME: thelook_events
+  PROJECT_NAME: thelook_event
   HOST: demo
 on:
   schedule:
