@@ -225,8 +225,8 @@
     col: 0
     width: 16
     height: 6
-  - title: Website Visit Volume vs. Conversion Rate
-    name: Website Visit Volume vs. Conversion Rate
+  - title: Website Visit Volume vs Conversion Rate
+    name: Website Visit Volume vs Conversion Rate
     model: thelook
     explore: events
     type: looker_column
