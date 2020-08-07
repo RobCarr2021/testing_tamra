@@ -11,7 +11,7 @@
     tile_separator_color: rgba(0, 0, 0, 0.05)
     tile_border_radius: 3
     show_tile_shadow: true
-    text_tile_text_color: "#0d0d0c"
+    text_tile_text_color: ''
   elements:
   - title: Total Visitors
     name: Total Visitors
