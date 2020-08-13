@@ -1,6 +1,7 @@
 - dashboard: business_pulse
   title: Business Pulse
   layout: newspaper
+  preferred_viewer: dashboards
   description: ''
   query_timezone: user_timezone
   embed_style:

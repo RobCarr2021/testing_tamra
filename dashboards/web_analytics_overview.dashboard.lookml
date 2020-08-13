@@ -1,6 +1,7 @@
 - dashboard: web_analytics_overview
   title: Web Analytics Overview
   layout: newspaper
+  preferred_viewer: dashboards
   query_timezone: user_timezone
   embed_style:
     background_color: ''

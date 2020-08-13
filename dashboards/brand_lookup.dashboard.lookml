@@ -1,6 +1,7 @@
 - dashboard: brand_lookup
   title: Brand Lookup
   layout: newspaper
+  preferred_viewer: dashboards
   query_timezone: user_timezone
   embed_style:
     background_color: "#f6f8fa"
