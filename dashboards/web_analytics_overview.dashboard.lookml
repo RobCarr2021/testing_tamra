@@ -4,11 +4,11 @@
   preferred_viewer: dashboards
   query_timezone: user_timezone
   embed_style:
-    background_color: ''
+    background_color: "#e8f1fa"
     show_title: true
     title_color: "#131414"
     show_filters_bar: true
-    tile_text_color: "#070808"
+    tile_text_color: gray
     tile_separator_color: rgba(0, 0, 0, 0.05)
     tile_border_radius: 3
     show_tile_shadow: true
