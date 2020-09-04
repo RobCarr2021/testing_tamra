@@ -33,8 +33,8 @@
       Email: users.email
     row: 0
     col: 0
-    width: 9
-    height: 6
+    width: 12
+    height: 7
   - title: Lifetime Orders
     name: Lifetime Orders
     model: thelook
@@ -52,8 +52,8 @@
     y_axes: []
     listen:
       Email: users.email
-    row: 0
-    col: 14
+    row: 7
+    col: 18
     width: 5
     height: 3
   - title: Total Items Returned
@@ -73,39 +73,8 @@
     y_axes: []
     listen:
       Email: users.email
-    row: 0
-    col: 19
-    width: 5
-    height: 3
-  - title: Lifetime Spend
-    name: Lifetime Spend
-    model: thelook
-    explore: order_items
-    type: single_value
-    fields: [order_items.total_sale_price]
-    filters:
-      order_items.created_date: 99 years
-      users.id: ''
-    sorts: [order_items.total_sale_price desc]
-    limit: 500
-    query_timezone: America/Los_Angeles
-    show_null_labels: false
-    font_size: medium
-    text_color: black
-    show_single_value_title: true
-    show_comparison: false
-    comparison_type: value
-    comparison_reverse_colors: false
-    show_comparison_label: true
-    colors: ["#5245ed", "#a2dcf3", "#776fdf", "#1ea8df", "#49cec1", "#776fdf", "#49cec1",
-      "#1ea8df", "#a2dcf3", "#776fdf", "#776fdf", "#635189"]
-    color_palette: Default
-    hidden_fields: []
-    y_axes: []
-    listen:
-      Email: users.email
-    row: 0
-    col: 9
+    row: 16
+    col: 3
     width: 5
     height: 3
   - title: Items Order History
@@ -125,8 +94,8 @@
     series_types: {}
     listen:
       Email: users.email
-    row: 3
-    col: 15
+    row: 7
+    col: 0
     width: 9
     height: 9
   - title: Favorite Categories
@@ -156,8 +125,8 @@
     defaults_version: 1
     listen:
       Email: users.email
-    row: 3
-    col: 9
+    row: 7
+    col: 12
     width: 6
     height: 9
   - title: User Location
@@ -200,10 +169,10 @@
     defaults_version: 1
     listen:
       Email: users.email
-    row: 6
-    col: 0
-    width: 9
-    height: 6
+    row: 0
+    col: 12
+    width: 12
+    height: 7
   filters:
   - name: Email
     title: Email
