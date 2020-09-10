@@ -33,8 +33,8 @@
       Email: users.email
     row: 0
     col: 0
-    width: 12
-    height: 7
+    width: 7
+    height: 5
   - title: Lifetime Orders
     name: Lifetime Orders
     model: thelook
@@ -53,9 +53,9 @@
     listen:
       Email: users.email
     row: 7
-    col: 18
-    width: 5
-    height: 3
+    col: 0
+    width: 7
+    height: 2
   - title: Total Items Returned
     name: Total Items Returned
     model: thelook
@@ -73,10 +73,10 @@
     y_axes: []
     listen:
       Email: users.email
-    row: 16
-    col: 3
-    width: 5
-    height: 3
+    row: 5
+    col: 0
+    width: 7
+    height: 2
   - title: Items Order History
     name: Items Order History
     model: thelook
@@ -94,10 +94,10 @@
     series_types: {}
     listen:
       Email: users.email
-    row: 7
+    row: 9
     col: 0
-    width: 9
-    height: 9
+    width: 16
+    height: 5
   - title: Favorite Categories
     name: Favorite Categories
     model: thelook
@@ -125,10 +125,10 @@
     defaults_version: 1
     listen:
       Email: users.email
-    row: 7
-    col: 12
-    width: 6
-    height: 9
+    row: 9
+    col: 16
+    width: 8
+    height: 5
   - title: User Location
     name: User Location
     model: thelook
@@ -170,9 +170,9 @@
     listen:
       Email: users.email
     row: 0
-    col: 12
-    width: 12
-    height: 7
+    col: 7
+    width: 17
+    height: 9
   filters:
   - name: Email
     title: Email
