@@ -414,7 +414,7 @@
     model: thelook
     explore: affinity
     type: looker_grid
-    fields: [product_b.item_name, product_a.item_name, affinity.avg_order_affinity,
+    fields: [product_a.item_name, product_b.item_name, affinity.avg_order_affinity,
       affinity.avg_user_affinity]
     filters:
       affinity.product_b_id: "-NULL"
@@ -423,12 +423,6 @@
     sorts: [affinity.avg_order_affinity desc]
     limit: 15
     query_timezone: America/Los_Angeles
-    color_application:
-      collection_id: b43731d5-dc87-4a8e-b807-635bef3948e7
-      palette_id: fb7bb53e-b77b-4ab6-8274-9d420d3d73f3
-      options:
-        steps: 5
-        reverse: false
     show_view_names: false
     show_row_numbers: true
     transpose: false
@@ -436,6 +430,20 @@
     hide_totals: false
     hide_row_totals: false
     size_to_fit: true
+    table_theme: white
+    limit_displayed_rows: false
+    enable_conditional_formatting: false
+    header_text_alignment: left
+    header_font_size: '12'
+    rows_font_size: '12'
+    conditional_formatting_include_totals: false
+    conditional_formatting_include_nulls: false
+    color_application:
+      collection_id: b43731d5-dc87-4a8e-b807-635bef3948e7
+      palette_id: fb7bb53e-b77b-4ab6-8274-9d420d3d73f3
+      options:
+        steps: 5
+        reverse: false
     series_cell_visualizations:
       affinity.avg_order_affinity:
         is_active: true
@@ -455,14 +463,6 @@
           - "#f20265"
           - "#FFD95F"
           - "#72D16D"
-    table_theme: white
-    limit_displayed_rows: false
-    enable_conditional_formatting: false
-    header_text_alignment: left
-    header_font_size: '12'
-    rows_font_size: '12'
-    conditional_formatting_include_totals: false
-    conditional_formatting_include_nulls: false
     stacking: ''
     trellis: ''
     colors: ["#57BEBE", "#EA8A2F", "#F2B431", "#64518A", "#8D7FB9", "#7F7977", "#B2A898",
@@ -493,6 +493,7 @@
     color_palette: Custom
     hidden_fields: []
     series_types: {}
+    defaults_version: 1
     listen:
       Brand Name: product_a.brand
     row: 18
@@ -643,9 +644,10 @@
     type: looker_column
     fields: [products.category, products.department, order_items.total_sale_price]
     pivots: [products.department]
-    sorts: [products.department, order_items.total_sale_price desc 0]
+    sorts: [products.department 0, order_items.total_sale_price desc 2]
     limit: 500
     column_limit: 50
+    row_total: right
     query_timezone: user_timezone
     x_axis_gridlines: false
     y_axis_gridlines: true
