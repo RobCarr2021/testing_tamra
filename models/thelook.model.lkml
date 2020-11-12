@@ -1,5 +1,5 @@
 connection: "looker-private-demo"
-label: "1) eCommerce with Event Data"
+label: " eCommerce"
 include: "/views/**/*.view" # include all the views
 include: "/dashboards/*.dashboard.lookml" # include all the views
 
@@ -7,8 +7,10 @@ include: "/dashboards/*.dashboard.lookml" # include all the views
 ############ Model Configuration #############
 
 datagroup: ecommerce_etl {
-  sql_trigger: SELECT max(id) FROM ecomm.order_items ;;
-  max_cache_age: "24 hours"}
+  sql_trigger: SELECT max(created_at) FROM ecomm.events ;;
+  max_cache_age: "24 hours"
+}
+
 persist_with: ecommerce_etl
 ############ Base Explores #############
 

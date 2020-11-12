@@ -1,5 +1,5 @@
 view: order_items {
-  sql_table_name: ecomm.order_items ;;
+  sql_table_name: looker-private-demo.ecomm.order_items ;;
 
   ########## IDs, Foreign Keys, Counts ###########
 
@@ -218,6 +218,7 @@ view: order_items {
        ;;
   }
 
+
   dimension: shipping_time {
     type: number
     sql: TIMESTAMP_DIFF(${delivered_raw}, ${shipped_raw}, DAY)*1.0 ;;
@@ -252,7 +253,7 @@ view: order_items {
   dimension: item_gross_margin_percentage {
     type: number
     value_format_name: percent_2
-    sql: 1.0 * ${gross_margin}/(CASE WHEN ${sale_price} = 0 THEN NULL ELSE ${sale_price} END) ;;
+    sql: 1.0 * ${gross_margin}/nullif(0,${sale_price}) ;;
   }
 
   dimension: item_gross_margin_percentage_tier {
@@ -300,13 +301,13 @@ view: order_items {
   measure: total_gross_margin_percentage {
     type: number
     value_format_name: percent_2
-    sql: 1.0 * ${total_gross_margin}/ (CASE WHEN ${total_sale_price} = 0 THEN NULL ELSE ${total_sale_price} END) ;;
+    sql: 1.0 * ${total_gross_margin}/ nullif(${total_sale_price},0) ;;
   }
 
   measure: average_spend_per_user {
     type: number
     value_format_name: usd
-    sql: 1.0 * ${total_sale_price} / (CASE WHEN ${users.count} = 0 THEN NULL ELSE ${users.count} END) ;;
+    sql: 1.0 * ${total_sale_price} / nullif(${users.count},0) ;;
     drill_fields: [detail*]
   }
 
@@ -356,6 +357,11 @@ view: order_items {
     type: yesno
     view_label: "Repeat Purchase Facts"
     sql: ${days_until_next_order} <= 30 ;;
+  }
+
+  dimension: repeat_orders_within_15d{
+    type: yesno
+    sql:  ${days_until_next_order} <= 15;;
   }
 
   measure: count_with_repeat_purchase_within_30d {

@@ -13,7 +13,7 @@ view: sessions {
         , CAST(MAX(user_id) AS INT64)  AS session_user_id
         , MIN(id) AS landing_event_id
         , MAX(id) AS bounce_event_id
-      FROM ecomm.events
+      FROM looker-private-demo.ecomm.events
       GROUP BY session_id
        ;;
   }
