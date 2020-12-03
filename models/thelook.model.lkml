@@ -62,6 +62,22 @@ explore: order_items {
     sql_on: ${distribution_centers.id} = ${inventory_items.product_distribution_center_id} ;;
     relationship: many_to_one
   }
+
+  query: orders_by_date {
+    dimensions: [order_items.created_date]
+    measures: [order_items.order_count]
+  }
+
+  query: monthly_order_summary {
+    dimensions: [order_items.created_month]
+    measures: [order_items.order_count, order_items.count, order_items.returned_count]
+  }
+
+  query: top_20_brands {
+    dimensions: [products.brand]
+    measures: [order_items.count]
+    limit: 20
+  }
 }
 
 
