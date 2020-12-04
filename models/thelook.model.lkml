@@ -62,28 +62,6 @@ explore: order_items {
     sql_on: ${distribution_centers.id} = ${inventory_items.product_distribution_center_id} ;;
     relationship: many_to_one
   }
-
-  query: orders_by_date {
-    description: "Order count by order date (daily breakdown)"
-    dimensions: [order_items.created_date]
-    measures: [order_items.order_count]
-    sorts: [order_items.created_date: desc]
-  }
-
-  query: monthly_order_summary {
-    description: "Overview of orders and returns per month"
-    dimensions: [order_items.created_month]
-    measures: [order_items.order_count, order_items.count, order_items.returned_count]
-    sorts: [order_items.order_count: desc, order_items.count: desc, order_items.returned_count: desc]
-  }
-
-  query: top_20_brands {
-    description: "Top brands based on the number of items purchased by users"
-    dimensions: [products.brand]
-    measures: [order_items.count]
-    sorts: [order_items.count: desc]
-    limit: 20
-  }
 }
 
 
@@ -273,6 +251,32 @@ explore: inventory_snapshot {
     type: left_outer
     sql_on: ${products.distribution_center_id}=${distribution_centers.id} ;;
     relationship: many_to_one
+  }
+}
+
+explore: order_item_queries {
+  extends: [order_items]
+  hidden: yes
+  query: orders_by_date {
+    description: "Order count by order date (daily breakdown)"
+    dimensions: [order_items.created_date]
+    measures: [order_items.order_count]
+    sorts: [order_items.created_date: desc]
+  }
+
+  query: monthly_order_summary {
+    description: "Overview of orders and returns per month"
+    dimensions: [order_items.created_month]
+    measures: [order_items.order_count, order_items.count, order_items.returned_count]
+    sorts: [order_items.order_count: desc, order_items.count: desc, order_items.returned_count: desc]
+  }
+
+  query: top_20_brands {
+    description: "Top brands based on the number of items purchased by users"
+    dimensions: [products.brand]
+    measures: [order_items.count]
+    sorts: [order_items.count: desc]
+    limit: 20
   }
 }
 
