@@ -255,6 +255,32 @@ explore: inventory_snapshot {
   }
 }
 
+explore: order_item_queries {
+  extends: [order_items]
+  hidden: yes
+  query: orders_by_date {
+    description: "Order count by order date (daily breakdown)"
+    dimensions: [order_items.created_date]
+    measures: [order_items.order_count]
+    sorts: [order_items.created_date: desc]
+  }
+
+  query: monthly_order_summary {
+    description: "Overview of orders and returns per month"
+    dimensions: [order_items.created_month]
+    measures: [order_items.order_count, order_items.count, order_items.returned_count]
+    sorts: [order_items.order_count: desc, order_items.count: desc, order_items.returned_count: desc]
+  }
+
+  query: top_20_brands {
+    description: "Top brands based on the number of items purchased by users"
+    dimensions: [products.brand]
+    measures: [order_items.count]
+    sorts: [order_items.count: desc]
+    limit: 20
+  }
+}
+
 explore: kitten_order_items {
   label: "Order Items (Kittens)"
   hidden: yes
