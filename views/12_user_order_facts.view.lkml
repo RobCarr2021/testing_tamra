@@ -42,6 +42,7 @@ view: user_order_facts {
     sql: ${TABLE}.latest_order ;;
   }
 
+
   dimension: days_as_customer {
     description: "Days between first and latest order"
     type: number
