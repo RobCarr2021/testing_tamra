@@ -13,6 +13,9 @@
     #tile_separator_color: "#bdb7b7"
     #tile_border_radius: 2
     #show_tile_shadow: false
+    # tile_separator_color: "#bdb7b7"
+    # tile_border_radius: 2
+    # show_tile_shadow: false
     text_tile_text_color: "#ffffff"
   elements:
   - title: Number of First Purchasers

@@ -12,6 +12,9 @@
     #tile_separator_color: rgba(0, 0, 0, 0.05)
     #tile_border_radius: 3
     #show_tile_shadow: true
+    # tile_separator_color: rgba(0, 0, 0, 0.05)
+    # tile_border_radius: 3
+    # show_tile_shadow: true
     text_tile_text_color: ''
   elements:
   - title: Total Visitors

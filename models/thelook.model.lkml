@@ -1,5 +1,6 @@
 connection: "looker-private-demo"
 label: " eCommerce"
+include: "queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
 include: "/dashboards/*.dashboard.lookml" # include all the views
 
@@ -253,6 +254,7 @@ explore: inventory_snapshot {
     relationship: many_to_one
   }
 }
+
 
 explore: kitten_order_items {
   label: "Order Items (Kittens)"

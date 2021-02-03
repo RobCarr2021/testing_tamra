@@ -12,6 +12,9 @@
     #tile_separator_color: "#faf3f3"
     #tile_border_radius: 5
     #show_tile_shadow: false
+    # tile_separator_color: "#faf3f3"
+    # tile_border_radius: 5
+    # show_tile_shadow: false
     text_tile_text_color: "#556d7a"
   elements:
   - title: Total Orders
