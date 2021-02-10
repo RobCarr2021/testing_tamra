@@ -224,6 +224,7 @@ view: order_items {
     sql: TIMESTAMP_DIFF(${delivered_raw}, ${shipped_raw}, DAY)*1.0 ;;
   }
 
+
   measure: average_days_to_process {
     type: average
     value_format_name: decimal_2
