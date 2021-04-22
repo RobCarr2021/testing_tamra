@@ -32,7 +32,7 @@ view: products {
     }
     link: {
       label: "{{value}} Analytics Dashboard"
-      url: "/dashboards/CRMxoGiGJUv4eGALMHiAb0?Brand%20Name={{ value | encode_uri }}"
+      url: "/dashboards-next/CRMxoGiGJUv4eGALMHiAb0?Brand%20Name={{ value | encode_uri }}"
       icon_url: "http://www.looker.com/favicon.ico"
     }
     drill_fields: [category, item_name]
