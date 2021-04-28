@@ -3,7 +3,7 @@ label: " eCommerce"
 include: "queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
 include: "/dashboards/*.dashboard.lookml" # include all the views
-
+include: "/*.dashboard"
 
 ############ Model Configuration #############
 
@@ -63,6 +63,20 @@ explore: order_items {
     sql_on: ${distribution_centers.id} = ${inventory_items.product_distribution_center_id} ;;
     relationship: many_to_one
   }
+
+  aggregate_table: rollup__created_date__users_traffic_source {
+    query: {
+      dimensions: [created_date, users.traffic_source]
+      measures: [average_sale_price, user_order_facts.average_lifetime_orders]
+      timezone: America/Los_Angeles
+    }
+
+    materialization: {
+      datagroup_trigger: ecommerce_etl
+    }
+  }
+
+
 }
 
 
@@ -158,6 +172,41 @@ explore: sessions {
     sql_on: ${user_order_facts.user_id} = ${users.id} ;;
     view_label: "Users"
   }
+
+  # aggregate_table: product_web_events {
+  #   query: {
+  #     dimensions: [product_viewed.brand, product_viewed.department]
+  #     measures: [cart_to_checkout_conversion, count]
+  #     filters: [
+  #       events.event_date: "90 days",
+  #       product_viewed.brand: "-NULL"
+  #     ]
+  #     timezone: America/Los_Angeles
+  #   }
+
+  #   materialization: {
+  #     datagroup_trigger: ecommerce_etl
+  #   }
+  # }
+
+
+  aggregate_table: rollup__events_event_date__product_viewed_brand__product_viewed_department {
+    query: {
+      dimensions: [events.event_date, product_viewed.brand, product_viewed.department]
+      measures: [cart_to_checkout_conversion, count]
+      filters: [product_viewed.brand: "-NULL"]
+      timezone: America/Los_Angeles
+    }
+
+    materialization: {
+      datagroup_trigger: ecommerce_etl
+    }
+  }
+
+
+
+
+
 }
 
 
@@ -264,5 +313,60 @@ explore: kitten_order_items {
   join: users {
     view_label: "Kittens"
     from: kitten_users
+  }
+}
+
+
+######### Cohort Analysis BQML #########
+explore: ecomm_training_info {
+  join: cluster_info {
+    relationship: many_to_one
+    sql: LEFT JOIN UNNEST(ecomm_training_info.cluster_info) as cluster_info ;;
+  }
+  join: ecomm_model_eval {
+    relationship: many_to_one
+    sql_on: ${ecomm_model_eval.clusters_num} = ${ecomm_training_info.clusters_num} ;;
+  }
+  join: ecomm_feature_info {
+    relationship: many_to_one
+    sql_on: ${ecomm_training_info.clusters_num} = ${ecomm_feature_info.clusters_num} ;;
+  }
+}
+
+explore: kmeans_model5 {}
+
+
+explore: ecomm_predict {
+  fields: [ALL_FIELDS*,-centroid_id, -user_id]
+  join: users {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${ecomm_predict.user_id} = ${users.id} ;;
+  }
+  join: order_items {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${users.id} = ${order_items.user_id} ;;
+  }
+  join: inventory_items {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${inventory_items.id} = ${order_items.inventory_item_id} ;;
+  }
+  join: products {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${products.id} = ${inventory_items.product_id}  ;;
+  }
+  join: repeat_purchase_facts {
+    relationship: many_to_one
+    type: full_outer
+    sql_on: ${order_items.order_id} = ${repeat_purchase_facts.order_id} ;;
+  }
+  join: order_facts {
+    type: left_outer
+    view_label: "Orders"
+    relationship: many_to_one
+    sql_on: ${order_facts.order_id} = ${order_items.order_id} ;;
   }
 }
