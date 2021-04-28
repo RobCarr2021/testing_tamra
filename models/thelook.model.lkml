@@ -336,6 +336,7 @@ explore: kmeans_model5 {}
 
 
 explore: ecomm_predict {
+  label: "(8) Cohort Analysis"
   fields: [ALL_FIELDS*,-centroid_id, -user_id]
   join: users {
     type: left_outer
