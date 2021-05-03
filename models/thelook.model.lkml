@@ -4,7 +4,6 @@ include: "queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
 include: "/dashboards/*.dashboard.lookml" # include all the views
 
-
 ############ Model Configuration #############
 
 datagroup: ecommerce_etl {
@@ -264,5 +263,60 @@ explore: kitten_order_items {
   join: users {
     view_label: "Kittens"
     from: kitten_users
+  }
+}
+
+######### Cohort Analysis BQML #########
+explore: ecomm_training_info {
+  join: cluster_info {
+    relationship: many_to_one
+    sql: LEFT JOIN UNNEST(ecomm_training_info.cluster_info) as cluster_info ;;
+  }
+  join: ecomm_model_eval {
+    relationship: many_to_one
+    sql_on: ${ecomm_model_eval.clusters_num} = ${ecomm_training_info.clusters_num} ;;
+  }
+  join: ecomm_feature_info {
+    relationship: many_to_one
+    sql_on: ${ecomm_training_info.clusters_num} = ${ecomm_feature_info.clusters_num} ;;
+  }
+}
+
+explore: kmeans_model5 {}
+
+
+explore: ecomm_predict {
+  label: "(8) Cohort Analysis"
+  fields: [ALL_FIELDS*,-centroid_id, -user_id]
+  join: users {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${ecomm_predict.user_id} = ${users.id} ;;
+  }
+  join: order_items {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${users.id} = ${order_items.user_id} ;;
+  }
+  join: inventory_items {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${inventory_items.id} = ${order_items.inventory_item_id} ;;
+  }
+  join: products {
+    type: left_outer
+    relationship: many_to_one
+    sql_on: ${products.id} = ${inventory_items.product_id}  ;;
+  }
+  join: repeat_purchase_facts {
+    relationship: many_to_one
+    type: full_outer
+    sql_on: ${order_items.order_id} = ${repeat_purchase_facts.order_id} ;;
+  }
+  join: order_facts {
+    type: left_outer
+    view_label: "Orders"
+    relationship: many_to_one
+    sql_on: ${order_facts.order_id} = ${order_items.order_id} ;;
   }
 }

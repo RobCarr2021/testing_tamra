@@ -35,7 +35,76 @@ view: products {
       url: "/dashboards-next/CRMxoGiGJUv4eGALMHiAb0?Brand%20Name={{ value | encode_uri }}"
       icon_url: "http://www.looker.com/favicon.ico"
     }
-    drill_fields: [category, item_name]
+
+    action: {
+      label: "Email Brand Promotion to Cohort"
+      url: "https://desolate-refuge-53336.herokuapp.com/posts"
+      icon_url: "https://sendgrid.com/favicon.ico"
+      param: {
+        name: "some_auth_code"
+        value: "abc123456"
+      }
+      form_param: {
+        name: "Subject"
+        required: yes
+        default: "Last Chance! 20% off {{ value }}"
+      }
+      form_param: {
+        name: "Body"
+        type: textarea
+        required: yes
+        default:
+        "Dear Valued Customer,
+
+        We appreciate your continue support and loyalty and wanted to show our appreciation. Offering a 15% discount on ALL products for our favorite brand {{ value }}.
+        Just used code {{ value | upcase }}-MANIA on your next checkout!
+
+        Your friends at the Look"
+      }
+    }
+    action: {
+      label: "Start Adwords Campaign"
+      url: "https://desolate-refuge-53336.herokuapp.com/posts"
+      icon_url: "https://www.google.com/s2/favicons?domain=www.adwords.google.com"
+      param: {
+        name: "some_auth_code"
+        value: "abc123456"
+      }
+      form_param: {
+        type: select
+        name: "Campaign Type"
+        option: { name: "Spend" label: "Spend" }
+        option: { name: "Leads" label: "Leads" }
+        option: { name: "Website Traffic" label: "Website Traffic" }
+        required: yes
+      }
+      form_param: {
+        name: "Campaign Name"
+        type: string
+        required: yes
+        default: "{{ value }} Campaign"
+      }
+
+      form_param: {
+        name: "Product Category"
+        type: string
+        required: yes
+        default: "{{ value }}"
+      }
+
+      form_param: {
+        name: "Budget"
+        type: string
+        required: yes
+      }
+
+      form_param: {
+        name: "Keywords"
+        type: string
+        required: yes
+        default: "{{ value }}"
+      }
+    }
   }
 
   dimension: retail_price {
