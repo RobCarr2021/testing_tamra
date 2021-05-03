@@ -1,4 +1,4 @@
-########################################### Evaluate Hyperparameter [Number of Clusters] #################################################
+########################################### Evaluate Hyperparameter [Number of Clusters] ##################################################
 view: ecomm_model_eval {
   derived_table: {
     sql: SELECT * FROM (

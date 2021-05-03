@@ -3,7 +3,7 @@ label: " eCommerce"
 include: "queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
 include: "/dashboards/*.dashboard.lookml" # include all the views
-#edit1
+
 ############ Model Configuration #############
 
 datagroup: ecommerce_etl {
