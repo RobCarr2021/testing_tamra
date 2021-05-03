@@ -1,4 +1,4 @@
-############################################# Feature Generation ############################################
+############################################# Feature Generation #############################################
 view: ecomm_feature_generation {
   derived_table: {
     sql: (SELECT * except(user_id1) FROM

@@ -1,3 +1,4 @@
+#cohort analysis overview
 - dashboard: cohort_analysis_overview
   title: Cohort Analysis Overview
   layout: newspaper
