@@ -54,10 +54,10 @@ view: products {
         type: textarea
         required: yes
         default:
-        "Dear {{ ecomm_predict.centroid_label }},
+        "Dear Valued Customer,
 
-        We appreciate your continue support and loyalty and wanted to show our appreciation. Offering a 15% discount on ALL products for our favorite brand {{ products.brand }}.
-        Just used code {{ products.brand | upcase }}-MANIA on your next checkout!
+        We appreciate your continue support and loyalty and wanted to show our appreciation. Offering a 15% discount on ALL products for our favorite brand {{ value }}.
+        Just used code {{ value | upcase }}-MANIA on your next checkout!
 
         Your friends at the Look"
       }
@@ -82,14 +82,14 @@ view: products {
         name: "Campaign Name"
         type: string
         required: yes
-        default: "{{ products.brand }} Campaign"
+        default: "{{ value }} Campaign"
       }
 
       form_param: {
         name: "Product Category"
         type: string
         required: yes
-        default: "{{ products.category }}"
+        default: "{{ value }}"
       }
 
       form_param: {
@@ -102,12 +102,9 @@ view: products {
         name: "Keywords"
         type: string
         required: yes
-        default: "{{ products.brand }}"
+        default: "{{ value }}"
       }
     }
-
-
-    drill_fields: [category, item_name]
   }
 
   dimension: retail_price {

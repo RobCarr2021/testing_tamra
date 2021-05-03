@@ -3,6 +3,7 @@ label: " eCommerce"
 include: "queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
 include: "/dashboards/*.dashboard.lookml" # include all the views
+include: "/*.dashboard.lookml"
 
 ############ Model Configuration #############
 
@@ -62,20 +63,6 @@ explore: order_items {
     sql_on: ${distribution_centers.id} = ${inventory_items.product_distribution_center_id} ;;
     relationship: many_to_one
   }
-
-  aggregate_table: rollup__created_date__users_traffic_source {
-    query: {
-      dimensions: [created_date, users.traffic_source]
-      measures: [average_sale_price, user_order_facts.average_lifetime_orders]
-      timezone: America/Los_Angeles
-    }
-
-    materialization: {
-      datagroup_trigger: ecommerce_etl
-    }
-  }
-
-
 }
 
 
@@ -171,41 +158,6 @@ explore: sessions {
     sql_on: ${user_order_facts.user_id} = ${users.id} ;;
     view_label: "Users"
   }
-
-  # aggregate_table: product_web_events {
-  #   query: {
-  #     dimensions: [product_viewed.brand, product_viewed.department]
-  #     measures: [cart_to_checkout_conversion, count]
-  #     filters: [
-  #       events.event_date: "90 days",
-  #       product_viewed.brand: "-NULL"
-  #     ]
-  #     timezone: America/Los_Angeles
-  #   }
-
-  #   materialization: {
-  #     datagroup_trigger: ecommerce_etl
-  #   }
-  # }
-
-
-  aggregate_table: rollup__events_event_date__product_viewed_brand__product_viewed_department {
-    query: {
-      dimensions: [events.event_date, product_viewed.brand, product_viewed.department]
-      measures: [cart_to_checkout_conversion, count]
-      filters: [product_viewed.brand: "-NULL"]
-      timezone: America/Los_Angeles
-    }
-
-    materialization: {
-      datagroup_trigger: ecommerce_etl
-    }
-  }
-
-
-
-
-
 }
 
 
@@ -314,7 +266,6 @@ explore: kitten_order_items {
     from: kitten_users
   }
 }
-
 
 ######### Cohort Analysis BQML #########
 explore: ecomm_training_info {
