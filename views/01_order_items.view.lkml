@@ -7,6 +7,7 @@ view: order_items {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
+    value_format: "00000"
   }
 
   dimension: inventory_item_id {
@@ -144,6 +145,7 @@ view: order_items {
         default: " Hi {{ users.first_name._value }}, thanks for your business!"
       }
     }
+    value_format: "00000"
   }
 
   ########## Time Dimensions ##########
@@ -443,7 +445,7 @@ view: order_items {
 ########## Sets ##########
 
   set: detail {
-    fields: [id, order_id, status, created_date, sale_price, products.brand, products.item_name, users.portrait, users.name, users.email]
+    fields: [order_id, status, created_date, sale_price, products.brand, products.item_name, users.portrait, users.name, users.email]
   }
   set: return_detail {
     fields: [id, order_id, status, created_date, returned_date, sale_price, products.brand, products.item_name, users.portrait, users.name, users.email]
