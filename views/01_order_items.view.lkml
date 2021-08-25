@@ -1,5 +1,5 @@
 view: order_items {
-  sql_table_name: ecomm.order_items ;;
+  sql_table_name: looker-private-demo.ecomm.order_items ;;
 
   ########## IDs, Foreign Keys, Counts ###########
 
@@ -7,6 +7,7 @@ view: order_items {
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
+    value_format: "00000"
   }
 
   dimension: inventory_item_id {
@@ -144,6 +145,7 @@ view: order_items {
         default: " Hi {{ users.first_name._value }}, thanks for your business!"
       }
     }
+    value_format: "00000"
   }
 
   ########## Time Dimensions ##########
@@ -218,10 +220,12 @@ view: order_items {
        ;;
   }
 
+
   dimension: shipping_time {
     type: number
     sql: TIMESTAMP_DIFF(${delivered_raw}, ${shipped_raw}, DAY)*1.0 ;;
   }
+
 
   measure: average_days_to_process {
     type: average
@@ -252,7 +256,7 @@ view: order_items {
   dimension: item_gross_margin_percentage {
     type: number
     value_format_name: percent_2
-    sql: 1.0 * ${gross_margin}/(CASE WHEN ${sale_price} = 0 THEN NULL ELSE ${sale_price} END) ;;
+    sql: 1.0 * ${gross_margin}/nullif(0,${sale_price}) ;;
   }
 
   dimension: item_gross_margin_percentage_tier {
@@ -300,13 +304,13 @@ view: order_items {
   measure: total_gross_margin_percentage {
     type: number
     value_format_name: percent_2
-    sql: 1.0 * ${total_gross_margin}/ (CASE WHEN ${total_sale_price} = 0 THEN NULL ELSE ${total_sale_price} END) ;;
+    sql: 1.0 * ${total_gross_margin}/ nullif(${total_sale_price},0) ;;
   }
 
   measure: average_spend_per_user {
     type: number
     value_format_name: usd
-    sql: 1.0 * ${total_sale_price} / (CASE WHEN ${users.count} = 0 THEN NULL ELSE ${users.count} END) ;;
+    sql: 1.0 * ${total_sale_price} / nullif(${users.count},0) ;;
     drill_fields: [detail*]
   }
 
@@ -356,6 +360,11 @@ view: order_items {
     type: yesno
     view_label: "Repeat Purchase Facts"
     sql: ${days_until_next_order} <= 30 ;;
+  }
+
+  dimension: repeat_orders_within_15d{
+    type: yesno
+    sql:  ${days_until_next_order} <= 15;;
   }
 
   measure: count_with_repeat_purchase_within_30d {
@@ -436,7 +445,7 @@ view: order_items {
 ########## Sets ##########
 
   set: detail {
-    fields: [id, order_id, status, created_date, sale_price, products.brand, products.item_name, users.portrait, users.name, users.email]
+    fields: [order_id, status, created_date, sale_price, products.brand, products.item_name, users.portrait, users.name, users.email]
   }
   set: return_detail {
     fields: [id, order_id, status, created_date, returned_date, sale_price, products.brand, products.item_name, users.portrait, users.name, users.email]
