@@ -173,10 +173,10 @@ view: order_items {
     type: time
     timeframes: [time, hour, date, week, month, year, hour_of_day, day_of_week, month_num, raw, week_of_year,month_name]
     sql: ${TABLE}.created_at ;;
-
+    order_by_field: created_month
   }
 
-  dimension: reporting_period {
+  dimension: reporting_period_ytd_vs_lytd {
     group_label: "Order Date"
     sql: CASE
         WHEN EXTRACT(YEAR from ${created_raw}) = EXTRACT(YEAR from CURRENT_TIMESTAMP())
