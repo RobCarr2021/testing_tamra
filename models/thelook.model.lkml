@@ -4,8 +4,6 @@ include: "queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
 include: "/dashboards/*.dashboard.lookml" # include all the views
 
-#new field
-
 ############ Model Configuration #############
 
 datagroup: ecommerce_etl {
