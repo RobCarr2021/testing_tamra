@@ -28,27 +28,32 @@ view: trailing_sales_snapshot {
 #   }
 
   dimension: product_id {
+    label: "Product ID"
     type: number
     sql: ${TABLE}.product_id ;;
   }
 
   dimension: snapshot_date {
+    label: "Snapshot Date"
     type: date
     sql: cast(${TABLE}.snapshot_date as timestamp) ;;
   }
 
   dimension: trailing_28d_sales {
+    label: "Sales Trailing 28 days"
     type: number
     hidden: yes
     sql: ${TABLE}.trailing_28d_sales ;;
   }
 
   measure: sum_trailing_28d_sales {
+    label: "Sum of Sales Trailing 28 Days"
     type: sum
     sql: ${trailing_28d_sales} ;;
   }
 
   measure: sum_trailing_28d_sales_yesterday {
+    label: "Sum of Sales Trailing 28 days - Yesterday"
     type: sum
     hidden: yes
     sql: ${trailing_28d_sales} ;;
@@ -59,6 +64,7 @@ view: trailing_sales_snapshot {
   }
 
   measure: sum_trailing_28d_sales_last_wk {
+    label: "Sum of Sales Trailing 28 days - Last Week"
     type: sum
     hidden: yes
     sql: ${trailing_28d_sales} ;;
