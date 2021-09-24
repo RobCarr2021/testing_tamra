@@ -35,6 +35,7 @@ view: data_tool {
   extends: [events]
   view_label: "Events"
   parameter: timeframe_filter {
+    label: "Timeframe Filter"
     view_label: "Data Tool"
     allowed_value: { value: "Date" }
     allowed_value: { value: "Week" }
@@ -42,6 +43,7 @@ view: data_tool {
   }
 
   dimension: timeframe {
+    label: "Timeframe"
     view_label: "Data Tool"
     sql: CASE
           WHEN {% parameter timeframe_filter %} = 'Date' THEN cast(${event_date} as string)
@@ -53,6 +55,7 @@ view: data_tool {
   }
 
   parameter: primary_metric_filter {
+    label: "Primary Metric Filter"
     view_label: "Data Tool"
     allowed_value: { value: "Users" }
     allowed_value: { value: "Visitors" }
@@ -62,6 +65,7 @@ view: data_tool {
   }
 
   measure: primary_metric {
+    label: "Primary Metric"
     type: number
     view_label: "Data Tool"
     sql: CASE
@@ -75,6 +79,7 @@ view: data_tool {
   }
 
   parameter: second_metric_filter {
+    label: "Second Metric Filter"
     view_label: "Data Tool"
     allowed_value: { value: "Bounces" }
     allowed_value: { value: "Bounce Rate" }
@@ -83,6 +88,7 @@ view: data_tool {
   }
 
   measure: second_metric {
+    label: "Second Metric"
     type: number
     view_label: "Data Tool"
     sql: CASE
@@ -117,6 +123,7 @@ view: data_tool {
 # Used for dynamically applying a format to the metric parameter
 ################################################################
   dimension: metric_name {
+    label: "Metric Name"
     hidden: yes
     type: string
     sql: CASE
@@ -129,6 +136,7 @@ view: data_tool {
   }
 
   dimension: format_symbol {
+    label: "Format Symbol"
     hidden: yes
     sql:
         CASE
@@ -145,6 +153,7 @@ view: data_tool {
 view: sessions_webanalytics {
   extends: [sessions]
   measure: conversion_rate {
+    label: "Conversion Rate"
     view_label: "Sessions"
     type: number
     value_format_name: percent_2
