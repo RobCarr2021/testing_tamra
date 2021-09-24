@@ -19,33 +19,39 @@ view: inventory_snapshot {
   }
 
   dimension: product_id {
+    label: "Product ID"
     type: number
     sql: ${TABLE}.product_id ;;
   }
 
   dimension: snapshot_date {
+    label: "Snapshot Date"
     type: date
     sql:  cast(${TABLE}.snapshot_date as timestamp) ;;
   }
 
   dimension: number_in_stock {
+    label: "Number in Stock"
     type: number
     hidden: yes
     sql: ${TABLE}.number_in_stock ;;
   }
 
   measure: total_in_stock {
+    label: "Total in Stock"
     type: sum
     sql: ${number_in_stock} ;;
   }
 
   measure: stock_coverage_ratio {
+    label: "Stock Coverage Ratio"
     type: number
     sql: 1.0 * ${total_in_stock} / (11.0*nullif(${trailing_sales_snapshot.sum_trailing_28d_sales},0)) ;;
     value_format_name: decimal_2
   }
 
   measure: sum_stock_yesterday {
+    label: "Sum Stock Yesterday"
     type: sum
     hidden: yes
     sql: ${number_in_stock} ;;
@@ -56,6 +62,7 @@ view: inventory_snapshot {
   }
 
   measure: sum_stock_last_wk {
+    label: "Sum Stock Last Week"
     type: sum
     hidden: yes
     sql: ${number_in_stock} ;;
@@ -66,6 +73,7 @@ view: inventory_snapshot {
   }
 
   measure: stock_coverage_ratio_yday {
+    label: "Stock Coverage Ratio Yesterday"
     type: number
     view_label: "Stock Ratio Changes"
     sql: 1.0 * ${sum_stock_yesterday} / (11*nullif(${trailing_sales_snapshot.sum_trailing_28d_sales_yesterday},0)) ;;
@@ -73,6 +81,7 @@ view: inventory_snapshot {
   }
 
   measure: stock_coverage_ratio_last_wk {
+    label: "Stock Coverage Ratio Last Week"
     type: number
     view_label: "Stock Ratio Changes"
     sql: 1.0 * ${sum_stock_last_wk} / nullif(${trailing_sales_snapshot.sum_trailing_28d_sales_last_wk},0) ;;
