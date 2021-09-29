@@ -11,24 +11,28 @@ view: order_items_share_of_wallet {
   ########## Comparison for Share of Wallet ##########
 
   filter: item_name {
+    label: "Item Name"
     view_label: "Share of Wallet (Item Level)"
     suggest_dimension: products.item_name
     suggest_explore: orders_with_share_of_wallet_application
   }
 
   filter: brand {
+    label: "Brand"
     view_label: "Share of Wallet (Brand Level)"
     suggest_dimension: products.brand
     suggest_explore: orders_with_share_of_wallet_application
   }
 
   dimension: primary_key {
+    label: "Primary Key"
     sql: ${order_items.id} ;;
     primary_key: yes
     hidden: yes
   }
 
   dimension: item_comparison {
+    label: "Item Comparison"
     view_label: "Share of Wallet (Item Level)"
     description: "Compare a selected item vs. other items in the brand vs. all other brands"
     sql: CASE
@@ -42,6 +46,7 @@ view: order_items_share_of_wallet {
   }
 
   dimension: brand_comparison {
+    label: "Brand Comparison"
     view_label: "Share of Wallet (Brand Level)"
     description: "Compare a selected brand vs. all other brands"
     sql: CASE
@@ -53,6 +58,7 @@ view: order_items_share_of_wallet {
   }
 
   measure: total_sale_price_this_item {
+    label: "Total Sale Price This Item"
     view_label: "Share of Wallet (Item Level)"
     type: sum
     hidden: yes
@@ -66,6 +72,7 @@ view: order_items_share_of_wallet {
   }
 
   measure: total_sale_price_this_brand {
+    label: "Total Sale Price This Brand"
     view_label: "Share of Wallet (Item Level)"
     type: sum
     hidden: yes
