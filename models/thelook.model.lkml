@@ -66,7 +66,23 @@ explore: order_items {
     sql_on: ${distribution_centers.id} = ${inventory_items.product_distribution_center_id} ;;
     relationship: many_to_one
   }
+  #roll up table for commonly used queries
+  aggregate_table: simple_rollup {
+    query: {
+      dimensions: [created_date, products.brand, products.category, products.department]
+      measures: [count, returned_count, returned_total_sale_price, total_gross_margin, total_sale_price]
+      filters: [order_items.created_date: "6 months"]
+      timezone: "America/Los_Angeles"
+    }
+    materialization: {
+      datagroup_trigger: ecommerce_etl
+    }
+  }
 }
+
+
+
+
 
 
 #########  Event Data Explores #########
