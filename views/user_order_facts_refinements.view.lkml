@@ -14,13 +14,6 @@ view: +user_order_facts {
     sql: ${user_id} ;;
   }
 
-  measure: lost_user_count {
-    type: number
-    sql:  ;;
-  }
-
-  dimension: is_active_customer {}
-
 
 }
 
