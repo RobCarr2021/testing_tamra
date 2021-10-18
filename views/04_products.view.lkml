@@ -16,6 +16,7 @@ view: products {
 
   dimension: item_name {
     sql: TRIM(${TABLE}.name) ;;
+    drill_fields: [id]
   }
 
   dimension: brand {
