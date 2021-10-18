@@ -2,6 +2,7 @@ view: events {
   sql_table_name: looker-private-demo.ecomm.events ;;
 
   dimension: event_id {
+    label: "Event ID"
     type: number
     primary_key: yes
     tags: ["mp_event_id"]
@@ -9,6 +10,7 @@ view: events {
   }
 
   dimension: session_id {
+    label: "Session ID"
     type: number
     hidden: yes
     sql: ${TABLE}.session_id ;;
@@ -21,6 +23,7 @@ view: events {
   }
 
   dimension: user_id {
+    label: "User ID"
     sql: ${TABLE}.user_id ;;
   }
 
@@ -31,12 +34,14 @@ view: events {
   }
 
   dimension: sequence_number {
+    label: "Sequence Number"
     type: number
     description: "Within a given session, what order did the events take place in? 1=First, 2=Second, etc"
     sql: ${TABLE}.sequence_number ;;
   }
 
   dimension: is_entry_event {
+    label: "Is Entry Event"
     type: yesno
     description: "Yes indicates this was the entry point / landing page of the session"
     sql: ${sequence_number} = 1 ;;
@@ -50,6 +55,7 @@ view: events {
   }
 
   measure: count_bounces {
+    label: "Count Bounces"
     type: count
     description: "Count of events where those events were the bounce page for the session"
 
@@ -60,6 +66,7 @@ view: events {
   }
 
   measure: bounce_rate {
+    label: "Bounce Rate"
     type: number
     value_format_name: percent_2
     description: "Percent of events where those events were the bounce page for the session, out of all events"
@@ -67,10 +74,12 @@ view: events {
   }
 
   dimension: full_page_url {
+    label: "Full Page URL"
     sql: ${TABLE}.uri ;;
   }
 
   dimension: viewed_product_id {
+    label: "Viewed Product ID"
     type: number
     sql: CASE WHEN ${event_type} = 'Product' THEN
           CAST(SPLIT(${full_page_url}, '/')[OFFSET(ARRAY_LENGTH(SPLIT(${full_page_url}, '/'))-1)] AS INT64)
@@ -79,11 +88,13 @@ view: events {
   }
 
   dimension: event_type {
+    label: "Event Type"
     sql: ${TABLE}.event_type ;;
     tags: ["mp_event_name"]
   }
 
   dimension: funnel_step {
+    label: "Funnel Step"
     description: "Login -> Browse -> Add to Cart -> Checkout"
     sql: CASE
         WHEN ${event_type} IN ('Login', 'Home') THEN '(1) Land'
@@ -96,6 +107,7 @@ view: events {
   }
 
   measure: unique_visitors {
+    label: "Unique Visitors"
     type: count_distinct
     description: "Uniqueness determined by IP Address and User Login"
     view_label: "Visitors"
@@ -104,6 +116,7 @@ view: events {
   }
 
   dimension: location {
+    label: "Location"
     type: location
     view_label: "Visitors"
     sql_latitude: ${TABLE}.latitude ;;
@@ -111,6 +124,7 @@ view: events {
   }
 
   dimension: approx_location {
+    label: "Approximate Location"
     type: location
     view_label: "Visitors"
     sql_latitude: round(${TABLE}.latitude,1) ;;
@@ -118,6 +132,7 @@ view: events {
   }
 
   dimension: has_user_id {
+    label: "Has User ID"
     type: yesno
     view_label: "Visitors"
     description: "Did the visitor sign in as a website user?"
@@ -125,6 +140,7 @@ view: events {
   }
 
   dimension: browser {
+    label: "Browser"
     view_label: "Visitors"
     sql: ${TABLE}.browser ;;
   }
@@ -136,11 +152,13 @@ view: events {
   }
 
   measure: count {
+    label: "Count"
     type: count
     drill_fields: [simple_page_info*]
   }
 
   measure: sessions_count {
+    label: "Sessions Count"
     type: count_distinct
     sql: ${session_id} ;;
   }

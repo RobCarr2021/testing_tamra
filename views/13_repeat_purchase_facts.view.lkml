@@ -1,4 +1,5 @@
 view: repeat_purchase_facts {
+  view_label: "Repeat Purchase Facts"
   derived_table: {
     datagroup_trigger: ecommerce_etl
     sql: SELECT
@@ -16,6 +17,7 @@ view: repeat_purchase_facts {
     }
 
    dimension: order_id {
+    label: "Order ID"
     type: number
     hidden: yes
     primary_key: yes
@@ -23,22 +25,26 @@ view: repeat_purchase_facts {
   }
 
   dimension: next_order_id {
+    label: "Next Order ID"
     type: number
     hidden: yes
     sql: ${TABLE}.next_order_id ;;
   }
 
   dimension: has_subsequent_order {
+    label: "Has Subsequent Order"
     type: yesno
     sql: ${next_order_id} > 0 ;;
   }
 
   dimension: number_subsequent_orders {
+    label: "Number Subsequent Orders"
     type: number
     sql: ${TABLE}.number_subsequent_orders ;;
   }
 
   dimension_group: next_order {
+    label: "Next Order"
     type: time
     timeframes: [raw, date]
     hidden: yes
