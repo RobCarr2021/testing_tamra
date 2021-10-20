@@ -262,7 +262,7 @@ view: order_items {
     label: "Sale Price"
     type: number
     value_format_name: usd
-    sql: ${TABLE}.sale_price ;;
+    sql: ${TABLE}.sale_price * .8;;
   }
 
   dimension: gross_margin {
