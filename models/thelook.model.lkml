@@ -72,7 +72,6 @@ explore: order_items {
       dimensions: [created_date, products.brand, products.category, products.department]
       measures: [count, returned_count, returned_total_sale_price, total_gross_margin, total_sale_price]
       filters: [order_items.created_date: "6 months"]
-      timezone: "America/Los_Angeles"
     }
     materialization: {
       datagroup_trigger: ecommerce_etl
