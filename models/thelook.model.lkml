@@ -60,6 +60,12 @@ explore: order_items {
     sql_on: ${order_items.order_id} = ${repeat_purchase_facts.order_id} ;;
   }
 
+  join: discounts {
+    view_label: "Discounts"
+    type: inner
+    sql_on: ${products.id} = ${discounts.product_id} ;;
+  }
+
   join: distribution_centers {
     view_label: "Distribution Center"
     type: left_outer

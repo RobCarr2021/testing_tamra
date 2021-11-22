@@ -116,6 +116,54 @@ view: products {
     label: "Retail Price"
     type: number
     sql: ${TABLE}.retail_price ;;
+    action: {
+      label: "Update Price"
+      url: "https://us-central1-sandbox-trials.cloudfunctions.net/ecomm_inventory_writeback"
+      param: {
+        name: "Price"
+        value: "24"
+      }
+      form_param: {
+        name: "Discount"
+        label: "Discount Tier"
+        type: select
+        option: {
+          name: "5% off"
+        }
+        option: {
+          name: "10% off"
+        }
+        option: {
+          name: "20% off"
+        }
+        option: {
+          name: "30% off"
+        }
+        option: {
+          name: "40% off"
+        }
+        option: {
+          name: "50% off"
+        }
+        default: "20% off"
+      }
+      param: {
+        name: "retail_price"
+        value: "{{ retail_price._value }}"
+      }
+      param: {
+        name: "inventory_item_id"
+        value: "{{ inventory_items.id._value }}"
+      }
+      param: {
+        name: "product_id"
+        value: "{{ id._value }}"
+      }
+      param: {
+        name: "security_key"
+        value: "googledemo"
+      }
+    }
   }
 
   dimension: department {
