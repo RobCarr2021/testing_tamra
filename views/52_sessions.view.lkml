@@ -22,11 +22,13 @@ view: sessions {
   #####  Basic Web Info  ########
 
   measure: count {
+    label: "Count"
     type: count
     drill_fields: [detail*]
   }
 
   dimension: session_id {
+    label: "Session ID"
     type: string
     primary_key: yes
     tags: ["mp_session_id"]
@@ -34,25 +36,30 @@ view: sessions {
   }
 
   dimension: session_user_id {
+    label: "Session User ID"
     tags: ["mp_session_uuid"]
     sql: ${TABLE}.session_user_id ;;
   }
 
   dimension: landing_event_id {
+    label: "Landing Event ID"
     sql: ${TABLE}.landing_event_id ;;
   }
 
   dimension: bounce_event_id {
+    label: "Bounce Event ID"
     sql: ${TABLE}.bounce_event_id ;;
   }
 
   dimension_group: session_start {
+    label: "Session Start"
     type: time
 #     timeframes: [time, date, week, month, hour_of_day, day_of_week]
     sql: ${TABLE}.session_start ;;
   }
 
   dimension_group: session_end {
+    label: "Session End"
     type: time
     timeframes: [raw, time, date, week, month]
     sql: ${TABLE}.session_end ;;
@@ -82,11 +89,13 @@ view: sessions {
   #####  Bounce Information  ########
 
   dimension: is_bounce_session {
+    label: "Is Bounce Session"
     type: yesno
     sql: ${number_of_events_in_session} = 1 ;;
   }
 
   measure: count_bounce_sessions {
+    label: "Count Bounce Sessions"
     type: count
     filters: {
       field: is_bounce_session
@@ -96,6 +105,7 @@ view: sessions {
   }
 
   measure: percent_bounce_sessions {
+    label: "Count Bounce Sessions"
     type: number
     value_format_name: percent_2
     sql: 1.0 * ${count_bounce_sessions} / nullif(${count},0) ;;
@@ -104,50 +114,59 @@ view: sessions {
   ####### Session by event types included  ########
 
   dimension: number_of_browse_events_in_session {
+    label: "Number of Browse Events in Session"
     type: number
     hidden: yes
     sql: ${TABLE}.browse_events ;;
   }
 
   dimension: number_of_product_events_in_session {
+    label: "Number of Product Events in Session"
     type: number
     hidden: yes
     sql: ${TABLE}.product_events ;;
   }
 
   dimension: number_of_cart_events_in_session {
+    label: "Number of Cart Events in Session"
     type: number
     hidden: yes
     sql: ${TABLE}.cart_events ;;
   }
 
   dimension: number_of_purchase_events_in_session {
+    label: "Number of Purchase Events in Session"
     type: number
     hidden: yes
     sql: ${TABLE}.purchase_events ;;
   }
 
   dimension: includes_browse {
+    label: "Includes Browse"
     type: yesno
     sql: ${number_of_browse_events_in_session} > 0 ;;
   }
 
   dimension: includes_product {
+    label: "Includes Product"
     type: yesno
     sql: ${number_of_product_events_in_session} > 0 ;;
   }
 
   dimension: includes_cart {
+    label: "Includes Cart"
     type: yesno
     sql: ${number_of_cart_events_in_session} > 0 ;;
   }
 
   dimension: includes_purchase {
+    label: "Includes Purchase"
     type: yesno
     sql: ${number_of_purchase_events_in_session} > 0 ;;
   }
 
   measure: count_with_cart {
+    label: "Count with Cart"
     type: count
     filters: {
       field: includes_cart
@@ -157,6 +176,7 @@ view: sessions {
   }
 
   measure: count_with_purchase {
+    label: "Count with Purchase"
     type: count
     filters: {
       field: includes_purchase
@@ -166,6 +186,7 @@ view: sessions {
   }
 
   dimension: number_of_events_in_session {
+    label: "Number of Events in Session"
     type: number
     sql: ${TABLE}.number_of_events_in_session ;;
   }
@@ -173,6 +194,7 @@ view: sessions {
   ####### Linear Funnel   ########
 
   dimension: furthest_funnel_step {
+    label: "Furthest Funnel Step"
     sql: CASE
       WHEN ${number_of_purchase_events_in_session} > 0 THEN '(5) Purchase'
       WHEN ${number_of_cart_events_in_session} > 0 THEN '(4) Add to Cart'
