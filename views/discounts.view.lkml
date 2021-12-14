@@ -11,7 +11,15 @@ view: discounts {
     sql: ${TABLE}.product_id ;;
   }
 
+  dimension: pk {
+    primary_key: yes
+    type: number
+    sql: CONCAT(${TABLE}.inventory_item_id, ${date_raw}) ;;
+  }
+
+
   dimension: inventory_item_id {
+    # primary_key: yes
     type: number
     sql: ${TABLE}.inventory_item_id ;;
   }
@@ -34,6 +42,12 @@ view: discounts {
   dimension_group: date {
     type: time
     sql: ${TABLE}.date ;;
+  }
+
+  measure: average_discount {
+    type: average
+    sql: ${TABLE}.discount_amount ;;
+    value_format_name: percent_2
   }
 
   set: detail {
