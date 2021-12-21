@@ -1,6 +1,6 @@
 connection: "looker-private-demo"
 label: " eCommerce"
-include: "queries*.view" # includes all queries refinements
+include: "/queries/queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
 include: "/dashboards/*.dashboard.lookml" # include all the views
 
@@ -58,6 +58,12 @@ explore: order_items {
     relationship: many_to_one
     type: full_outer
     sql_on: ${order_items.order_id} = ${repeat_purchase_facts.order_id} ;;
+  }
+
+  join: discounts {
+    view_label: "Discounts"
+    type: inner
+    sql_on: ${products.id} = ${discounts.product_id} ;;
   }
 
   join: distribution_centers {
