@@ -73,16 +73,16 @@ explore: order_items {
     relationship: many_to_one
   }
   #roll up table for commonly used queries
-  aggregate_table: simple_rollup {
-    query: {
-      dimensions: [created_date, products.brand, products.category, products.department]
-      measures: [count, returned_count, returned_total_sale_price, total_gross_margin, total_sale_price]
-      filters: [order_items.created_date: "6 months"]
-    }
-    materialization: {
-      datagroup_trigger: ecommerce_etl
-    }
-  }
+  # aggregate_table: simple_rollup {
+  #   query: {
+  #     dimensions: [created_date, products.brand, products.category, products.department]
+  #     measures: [count, returned_count, returned_total_sale_price, total_gross_margin, total_sale_price]
+  #     filters: [order_items.created_date: "6 months"]
+  #   }
+  #   materialization: {
+  #     datagroup_trigger: ecommerce_etl
+  #   }
+  # }
 }
 
 
