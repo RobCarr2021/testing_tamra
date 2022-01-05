@@ -22,7 +22,7 @@ explore: order_items {
     type: left_outer
     view_label: "Orders"
     relationship: many_to_one
-    sql_on: ${order_facts.order_id} = ${order_items.order_id} ;;
+    sql_on: ${order_facts.order_id} AND ${order_items.order_id} ;;
   }
 
   join: inventory_items {
