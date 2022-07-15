@@ -73,7 +73,7 @@ view: users {
     link: {
       label: "User Lookup Dashboard"
       url: "/dashboards-next/ayalascustomerlookupdb?Email={{ value | encode_uri }}"
-      icon_url: "http://www.looker.com/favicon.ico"
+      icon_url: "https://cdn.icon-icons.com/icons2/2248/PNG/512/monitor_dashboard_icon_136391.png"
     }
     action: {
       label: "Email Promotion to Customer"
