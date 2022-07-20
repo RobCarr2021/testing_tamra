@@ -1,27 +1,32 @@
 view: order_items {
   sql_table_name: looker-private-demo.ecomm.order_items ;;
-
+  view_label: "Order Items"
   ########## IDs, Foreign Keys, Counts ###########
 
   dimension: id {
+    label: "ID"
     primary_key: yes
     type: number
     sql: ${TABLE}.id ;;
+    value_format: "00000"
   }
 
   dimension: inventory_item_id {
+    label: "Inventory Item ID"
     type: number
     hidden: yes
     sql: ${TABLE}.inventory_item_id ;;
   }
 
   dimension: user_id {
+    label: "User Id"
     type: number
     hidden: yes
     sql: ${TABLE}.user_id ;;
   }
 
   measure: count {
+    label: "Count"
     type: count
     drill_fields: [detail*]
   }
@@ -55,12 +60,14 @@ view: order_items {
   }
 
   dimension: order_id_no_actions {
+    label: "Order ID No Actions"
     type: number
     hidden: yes
     sql: ${TABLE}.order_id ;;
   }
 
   dimension: order_id {
+    label: "Order ID"
     type: number
     sql: ${TABLE}.order_id ;;
     action: {
@@ -144,6 +151,7 @@ view: order_items {
         default: " Hi {{ users.first_name._value }}, thanks for your business!"
       }
     }
+    value_format: "00000"
   }
 
   ########## Time Dimensions ##########
@@ -192,11 +200,13 @@ view: order_items {
   }
 
   dimension: days_since_sold {
+    label: "Days Since Sold"
     hidden: yes
     sql: TIMESTAMP_DIFF(${created_raw},CURRENT_TIMESTAMP(), DAY) ;;
   }
 
   dimension: months_since_signup {
+    label: "Months Since Signup"
     view_label: "Orders"
     type: number
     sql: CAST(FLOOR(TIMESTAMP_DIFF(${created_raw}, ${users.created_raw}, DAY)/30) AS INT64) ;;
@@ -205,13 +215,15 @@ view: order_items {
 ########## Logistics ##########
 
   dimension: status {
+    label: "Status"
     sql: ${TABLE}.status ;;
   }
 
   dimension: days_to_process {
+    label: "Days to Process"
     type: number
     sql: CASE
-        WHEN ${status} = 'Processing' THEN TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), ${created_raw}, DAY)*1.0
+        WHEN ${status} = 'Processing' THEN TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), ${created_raw}, DAY)*1.0 + 1
         WHEN ${status} IN ('Shipped', 'Complete', 'Returned') THEN TIMESTAMP_DIFF(${shipped_raw}, ${created_raw}, DAY)*1.0
         WHEN ${status} = 'Cancelled' THEN NULL
       END
@@ -220,17 +232,21 @@ view: order_items {
 
 
   dimension: shipping_time {
+    label: "Shipping Time"
     type: number
     sql: TIMESTAMP_DIFF(${delivered_raw}, ${shipped_raw}, DAY)*1.0 ;;
   }
 
+
   measure: average_days_to_process {
+    label: "Average Days to Process"
     type: average
     value_format_name: decimal_2
     sql: ${days_to_process} ;;
   }
 
   measure: average_shipping_time {
+    label: "Average Shipping Time"
     type: average
     value_format_name: decimal_2
     sql: ${shipping_time} ;;
@@ -239,24 +255,28 @@ view: order_items {
 ########## Financial Information ##########
 
   dimension: sale_price {
+    label: "Sale Price"
     type: number
     value_format_name: usd
     sql: ${TABLE}.sale_price ;;
   }
 
   dimension: gross_margin {
+    label: "Gross Margin"
     type: number
     value_format_name: usd
-    sql: ${sale_price} - ${inventory_items.cost} ;;
+    sql: ${sale_price} - ${inventory_items.cost};;
   }
 
   dimension: item_gross_margin_percentage {
+    label: "Item Gross Margin Percentage"
     type: number
     value_format_name: percent_2
-    sql: 1.0 * ${gross_margin}/nullif(0,${sale_price}) ;;
+    sql: 1.0 * ${gross_margin}/NULLIF(${sale_price},0) ;;
   }
 
   dimension: item_gross_margin_percentage_tier {
+    label: "Item Gross Margin Percentage Tier"
     type: tier
     sql: 100*${item_gross_margin_percentage} ;;
     tiers: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90]
@@ -264,6 +284,7 @@ view: order_items {
   }
 
   measure: total_sale_price {
+    label: "Total Sale Price"
     type: sum
     value_format_name: usd
     sql: ${sale_price} ;;
@@ -271,13 +292,16 @@ view: order_items {
   }
 
   measure: total_gross_margin {
+    label: "Total Gross Margin"
     type: sum
     value_format_name: usd
     sql: ${gross_margin} ;;
-    drill_fields: [detail*]
+    # drill_fields: [detail*]
+    drill_fields: [user_id, average_sale_price, total_gross_margin]
   }
 
   measure: average_sale_price {
+    label: "Average Sale Price"
     type: average
     value_format_name: usd
     sql: ${sale_price} ;;
@@ -285,6 +309,7 @@ view: order_items {
   }
 
   measure: median_sale_price {
+    label: "Median Sale Price"
     type: median
     value_format_name: usd
     sql: ${sale_price} ;;
@@ -292,6 +317,7 @@ view: order_items {
   }
 
   measure: average_gross_margin {
+    label: "Average Gross Margin"
     type: average
     value_format_name: usd
     sql: ${gross_margin} ;;
@@ -299,12 +325,14 @@ view: order_items {
   }
 
   measure: total_gross_margin_percentage {
+    label: "Total Gross Margin Percentage"
     type: number
     value_format_name: percent_2
     sql: 1.0 * ${total_gross_margin}/ nullif(${total_sale_price},0) ;;
   }
 
   measure: average_spend_per_user {
+    label: "Average Spend per User"
     type: number
     value_format_name: usd
     sql: 1.0 * ${total_sale_price} / nullif(${users.count},0) ;;
@@ -314,11 +342,13 @@ view: order_items {
 ########## Return Information ##########
 
   dimension: is_returned {
+    label: "Is Returned"
     type: yesno
     sql: ${returned_raw} IS NOT NULL ;;
   }
 
   measure: returned_count {
+    label: "Returned Count"
     type: count_distinct
     sql: ${id} ;;
     filters: {
@@ -329,6 +359,7 @@ view: order_items {
   }
 
   measure: returned_total_sale_price {
+    label: "Returned Total Sale Price"
     type: sum
     value_format_name: usd
     sql: ${sale_price} ;;
@@ -339,6 +370,7 @@ view: order_items {
   }
 
   measure: return_rate {
+    label: "Return Rate"
     type: number
     value_format_name: percent_2
     sql: 1.0 * ${returned_count} / nullif(${count},0) ;;
@@ -348,23 +380,27 @@ view: order_items {
 ########## Repeat Purchase Facts ##########
 
   dimension: days_until_next_order {
+    label: "Days Until Next Order"
     type: number
     view_label: "Repeat Purchase Facts"
     sql: TIMESTAMP_DIFF(${created_raw},${repeat_purchase_facts.next_order_raw}, DAY) ;;
   }
 
   dimension: repeat_orders_within_30d {
+    label: "Repeat Orders within 30 Days"
     type: yesno
     view_label: "Repeat Purchase Facts"
     sql: ${days_until_next_order} <= 30 ;;
   }
 
   dimension: repeat_orders_within_15d{
+    label: "Repeat Orders within 15 Days"
     type: yesno
     sql:  ${days_until_next_order} <= 15;;
   }
 
   measure: count_with_repeat_purchase_within_30d {
+    label: "Count with Repeat Purchase within 30 Days"
     type: count_distinct
     sql: ${id} ;;
     view_label: "Repeat Purchase Facts"
@@ -442,7 +478,7 @@ view: order_items {
 ########## Sets ##########
 
   set: detail {
-    fields: [id, order_id, status, created_date, sale_price, products.brand, products.item_name, users.portrait, users.name, users.email]
+    fields: [order_id, status, created_date, sale_price, products.brand, products.item_name, users.portrait, users.name, users.email]
   }
   set: return_detail {
     fields: [id, order_id, status, created_date, returned_date, sale_price, products.brand, products.item_name, users.portrait, users.name, users.email]
