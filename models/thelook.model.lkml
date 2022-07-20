@@ -18,6 +18,7 @@ persist_with: ecommerce_etl
 explore: order_items {
   label: "(1) Orders, Items and Users"
   view_name: order_items
+  # sql_always_where: ${products.brand} in ({{ _user_attributes['brand'] }}) ;;
 
   join: order_facts {
     type: left_outer
@@ -70,6 +71,7 @@ explore: order_items {
 
 explore: events {
   label: "(2) Web Event Data"
+  # sql_always_where: ${product_viewed.brand} in ({{ _user_attributes['brand'] }}) ;;
 
   join: sessions {
     type: left_outer
@@ -116,6 +118,7 @@ explore: events {
 
 explore: sessions {
   label: "(3) Web Session Data"
+  # sql_always_where: ${product_viewed.brand} in ({{ _user_attributes['brand'] }}) ;;
 
   join: events {
     type: left_outer
