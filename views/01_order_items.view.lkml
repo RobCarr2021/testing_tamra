@@ -186,7 +186,7 @@ view: order_items {
       form_param: {
         name: "Price"
         type: string
-        default: "{{ order_items.sale_price._rendered_value }}"
+        default: "{{ sale_price._rendered_value }}"
       }
 
       form_param: {
