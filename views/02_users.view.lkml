@@ -247,3 +247,24 @@ view: users {
     fields: [id, name, email, age, created_date, orders.count, order_items.count]
   }
 }
+
+# If necessary, uncomment the line below to include explore_source.
+# include: "thelook.model.lkml"
+
+view: first_table {
+  derived_table: {
+    explore_source: order_items {
+      column: order_count {}
+      column: name { field: distribution_centers.name }
+    }
+  }
+  dimension: order_count {
+    label: "Orders Order Count"
+    description: ""
+    type: number
+  }
+  dimension: name {
+    label: "Distribution Center Name"
+    description: ""
+  }
+}

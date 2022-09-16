@@ -14,10 +14,29 @@ datagroup: ecommerce_etl {
 persist_with: ecommerce_etl
 ############ Base Explores #############
 
+
+#### Access Grant #####
+#######################
+# Object Based Security  : Explore, Dimensions, Measures
+
+
+#access_grant: policy_1 {
+#  allowed_values: ["Yes"]
+#  user_attribute: finance_team
+#}
+
+explore: atom_order_items {}
 explore: order_items {
   label: "(1) Orders, Items and Users"
   view_name: order_items
-  # sql_always_where: ${products.brand} in ({{ _user_attributes['brand'] }}) ;;
+
+#### RLS / Access Filters ####
+
+#  access_filter: {
+#    field: users.country
+#    user_attribute: country
+#  }
+############################
 
   join: order_facts {
     type: left_outer

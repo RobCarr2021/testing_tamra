@@ -11,6 +11,44 @@ view: order_items {
     value_format: "00000"
   }
 
+  filter: previous_period_filter {
+    type: date
+    description: "Use this filter for period analysis"
+    sql: ${this_month_last_month} IS NOT NULL ;;
+  }
+
+  dimension: this_month_last_month {
+    sql: CASE WHEN -- test
+    date_trunc(${created_raw}, month) =  date_trunc({% date_start previous_period_filter %}, month) THEN 'This Month'
+    WHEN
+    ${created_date} >= DATE_TRUNC(date_trunc(CAST({% date_start previous_period_filter %} as date), month) - 1, month) AND
+   ${created_date} <= last_day(date_sub(CAST({% date_start previous_period_filter %} as date), interval 1 month)) then 'Previous Month'
+  END
+    ;;
+  }
+
+  dimension: previous_period {
+    type: string
+    description: "The reporting period as selected by the Previous Period Filter"
+    sql:
+      CASE
+          WHEN {% date_start previous_period_filter %} is not null AND {% date_end previous_period_filter %} is not null /* date ranges or in the past x days */
+      THEN
+        CASE
+          WHEN CAST(${created_raw} AS TIMESTAMP) >=  {% date_start previous_period_filter %}
+          AND CAST(${created_raw} AS TIMESTAMP) <= {% date_end previous_period_filter %}
+          THEN 'This Month'
+          WHEN CAST(${created_raw} AS TIMESTAMP) >=
+          TIMESTAMP_ADD(
+          TIMESTAMP_ADD(
+          {% date_start previous_period_filter %}, INTERVAL -1 DAY ), INTERVAL
+          -1 MONTH)
+          AND CAST(${created_raw} AS TIMESTAMP) <=
+          TIMESTAMP_ADD({% date_start previous_period_filter %}, INTERVAL -1 DAY )
+          THEN 'Previous Period'
+        END
+      END ;;
+  }
   dimension: inventory_item_id {
     label: "Inventory Item ID"
     type: number
@@ -29,6 +67,12 @@ view: order_items {
     label: "Count"
     type: count
     drill_fields: [detail*]
+  }
+
+  measure: ratio {
+    type: number
+    sql: ${total_sale_price}/nullif(${count},0) ;;
+    value_format_name: decimal_4
   }
 
   measure: count_last_28d {
@@ -291,6 +335,57 @@ view: order_items {
     drill_fields: [detail*]
   }
 
+  parameter: decimals {
+    type: string
+    allowed_value: {
+      label: "Millions"
+      value: "M"
+    }
+    allowed_value: {
+      label: "Thousands"
+      value: "K"
+    }
+    allowed_value: {
+      label: "ALL"
+      value: "X"
+    }
+  }
+
+  measure: sales_k {
+    hidden: yes
+    #label: "Total Sale Price"
+    type: sum
+    value_format: "0.000,\" K\""
+    sql: ${sale_price} ;;
+    drill_fields: [detail*]
+  }
+
+  measure: sales_m {
+    hidden: yes
+    #label: "Total Sale Price"
+    type: sum
+    value_format: "0.000,,\" M\""
+    sql: ${sale_price} ;;
+    drill_fields: [detail*]
+  }
+
+  measure: sales_show {
+    #label: "Total Sale Price"
+    type: sum
+    #value_format: "0.000,,\" M\""
+    sql: ${sale_price} ;;
+    drill_fields: [detail*]
+    html: {% if decimals._parameter_value == "'M'" %}
+      {{sales_m._rendered_value}}
+    {% elsif decimals._parameter_value == "'K'" %}
+      {{sales_k._rendered_value}}
+    {% else %}
+      {{rendered_value}}
+    {% endif %}
+     ;;
+  }
+
+
   measure: total_gross_margin {
     label: "Total Gross Margin"
     type: sum
@@ -356,6 +451,11 @@ view: order_items {
       value: "yes"
     }
     drill_fields: [detail*]
+    html:
+    <a href="{{link}}" target="_blank">
+    {{ rendered_value }} </a>
+    <br>- {{link}}
+    ;;
   }
 
   measure: returned_total_sale_price {
@@ -374,6 +474,7 @@ view: order_items {
     type: number
     value_format_name: percent_2
     sql: 1.0 * ${returned_count} / nullif(${count},0) ;;
+    html: {{link}} ;;
   }
 
 
