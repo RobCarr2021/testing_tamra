@@ -15,17 +15,6 @@ persist_with: ecommerce_etl
 ############ Base Explores #############
 
 
-#### Access Grant #####
-#######################
-# Object Based Security  : Explore, Dimensions, Measures
-
-
-#access_grant: policy_1 {
-#  allowed_values: ["Yes"]
-#  user_attribute: finance_team
-#}
-
-explore: atom_order_items {}
 explore: order_items {
   label: "(1) Orders, Items and Users"
   view_name: order_items
