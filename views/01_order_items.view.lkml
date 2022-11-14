@@ -297,40 +297,6 @@ view: order_items {
     drill_fields: [detail*]
   }
 
-  parameter: decimals {
-    type: string
-    allowed_value: {
-      label: "Millions"
-      value: "M"
-    }
-    allowed_value: {
-      label: "Thousands"
-      value: "K"
-    }
-    allowed_value: {
-      label: "ALL"
-      value: "X"
-    }
-  }
-
-  measure: sales_k {
-    hidden: yes
-    #label: "Total Sale Price"
-    type: sum
-    value_format: "0.000,\" K\""
-    sql: ${sale_price} ;;
-    drill_fields: [detail*]
-  }
-
-  measure: sales_m {
-    hidden: yes
-    #label: "Total Sale Price"
-    type: sum
-    value_format: "0.000,,\" M\""
-    sql: ${sale_price} ;;
-    drill_fields: [detail*]
-  }
-
   measure: total_gross_margin {
     label: "Total Gross Margin"
     type: sum
