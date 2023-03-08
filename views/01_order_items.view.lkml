@@ -51,7 +51,7 @@ view: order_items {
     view_label: "Orders"
     type: count_distinct
     drill_fields: [detail*]
-    sql: ${order_id} ;;
+    sql: ${order_id};;
   }
 
   measure: first_purchase_count {
@@ -264,14 +264,14 @@ view: order_items {
     label: "Sale Price"
     type: number
     value_format_name: usd
-    sql: ${TABLE}.sale_price ;;
+    sql: ${TABLE}.sale_price;;
   }
 
   dimension: gross_margin {
     label: "Gross Margin"
     type: number
     value_format_name: usd
-    sql: ${sale_price} - ${inventory_items.cost};;
+    sql: ${sale_price} - ${inventory_items.cost} / 2;;
   }
 
   dimension: item_gross_margin_percentage {
