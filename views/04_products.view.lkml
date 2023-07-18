@@ -214,6 +214,23 @@ view: products {
     drill_fields: [department, detail2*, -department_count] # don't show because it will always be 1
   }
 
+  measure: prefered_categories {
+    hidden: yes
+    label: "Prefered Categories"
+    type: list
+    list_field: category
+    #order_by_field: order_items.count
+
+  }
+
+  measure: prefered_brands {
+    hidden: yes
+    label: "Prefered Brand"
+    type: list
+    list_field: brand
+    #order_by_field: count
+  }
+
   set: detail {
     fields: [id, item_name, brand, category, department, retail_price, customers.count, orders.count, order_items.count, inventory_items.count]
   }
