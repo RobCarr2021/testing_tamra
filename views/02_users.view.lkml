@@ -106,6 +106,8 @@ view: users {
 
 
   dimension: promo_email {
+    label: "AI Generated Email (Action)"
+    description: "Use this with the user email if you want to send the email - action"
     action: {
       label: "Generate Email Promotion to Customer"
       url: "https://desolate-refuge-53336.herokuapp.com/posts"
