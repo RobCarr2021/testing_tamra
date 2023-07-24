@@ -2,6 +2,7 @@ connection: "looker-private-demo"
 label: " eCommerce"
 include: "/queries/queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
+include: "/gen_ai/**/*.view" # include all the views
 include: "/dashboards/*.dashboard.lookml" # include all the views
 
 ############ Model Configuration #############
@@ -24,6 +25,12 @@ explore: order_items {
     view_label: "Orders"
     relationship: many_to_one
     sql_on: ${order_facts.order_id} = ${order_items.order_id} ;;
+  }
+
+  join: promo_email {
+    type: left_outer
+    sql_on: ${promo_email.id} = ${users.id} ;;
+    relationship: one_to_one
   }
 
   join: inventory_items {

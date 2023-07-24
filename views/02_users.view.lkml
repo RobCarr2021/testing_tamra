@@ -72,7 +72,7 @@ view: users {
 
     link: {
       label: "User Lookup Dashboard"
-      url: "/dashboards-next/ayalascustomerlookupdb?Email={{ value | encode_uri }}"
+      url: "/dashboards/8475?Email={{ value | encode_uri }}"
       icon_url: "https://cdn.icon-icons.com/icons2/2248/PNG/512/monitor_dashboard_icon_136391.png"
     }
     action: {
@@ -102,6 +102,57 @@ view: users {
       }
     }
     required_fields: [name, first_name]
+  }
+
+
+  dimension: promo_email {
+    label: "AI Generated Email (Action)"
+    description: "Use this with the user email if you want to send the email - action"
+    action: {
+      label: "Generate Email Promotion to Customer"
+      url: "https://desolate-refuge-53336.herokuapp.com/posts"
+      icon_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Google_Bard_logo.svg/1200px-Google_Bard_logo.svg.png?20230425130013"
+      param: {
+        name: "some_auth_code"
+        value: "abc123456"
+      }
+      form_param: {
+        name: "Subject"
+        required: yes
+        default: "Thank you {{ users.name._value }}"
+      }
+      form_param: {
+        name: "Body"
+        type: textarea
+        required: yes
+        default:
+        "{{ promo_email.generated_text._value }}
+
+        TheLook Team"
+      }
+    }
+    sql: "Generate Promo Email" ;;
+    html:
+    <div style="
+    color: #4285f4;
+    background: rgba( 255 , 255 , 255 , 0.25 );
+    box-shadow: 0 2px 8px 0 rgba( 31 , 38 , 135 , 0.37 );
+    border-radius: 10px;
+    border: 1px solid rgba( 255 , 255 , 255 , 0.18 );
+    font-weight: 400;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    padding: 10px;
+    margin: 5px;
+    font-size: 1rem;
+    line-height: 1.5;
+    width: auto;
+    font-color: black;
+    color: gray;"
+    >
+    <span><img src='https://upload.wikimedia.org/wikipedia/commons/thumb/f/f0/Google_Bard_logo.svg/1200px-Google_Bard_logo.svg.png?20230425130013' width="80" height="80" alt="Generative AI"/>{{linked_value}}</span>
+    </div>;;
   }
 
   dimension: image_file {

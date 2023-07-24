@@ -31,12 +31,6 @@ view: order_items {
     drill_fields: [detail*]
   }
 
-  measure: ratio {
-    type: number
-    sql: ${total_sale_price}/nullif(${count},0) ;;
-    value_format_name: decimal_4
-  }
-
   measure: count_last_28d {
     label: "Count Sold in Trailing 28 Days"
     type: count_distinct
