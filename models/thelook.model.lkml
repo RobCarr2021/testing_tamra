@@ -48,7 +48,7 @@ explore: order_items {
   }
 
   join: user_order_facts {
-    view_label: "Users Facts"
+    view_label: "Users"
     type: left_outer
     relationship: many_to_one
     sql_on: ${user_order_facts.user_id} = ${order_items.user_id} ;;
