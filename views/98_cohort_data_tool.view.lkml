@@ -93,12 +93,14 @@ view: cohort_size {
   }
 
   measure: cohort_size {
+    label: "Cohort Size"
     type: sum
     sql: ${TABLE}.cohort_size ;;
     drill_fields: [users.id, users.name, users.email, users.age, users.created_date, users.count]
   }
 
   dimension: cohort {
+    label: "Cohort"
     description: "Use in conjuction with the Cohort Picker"
     primary_key: yes
     type: string
@@ -107,6 +109,7 @@ view: cohort_size {
   }
 
   measure: metric {
+    label: "Metric"
     type: number
     description: "Use in conjuction with the Metric Picker"
     sql: CASE
@@ -125,6 +128,7 @@ view: cohort_size {
   }
 
   measure: percent_user_retention {
+    label: "Percent User Retention"
     view_label: "Users"
     description: "number of active users / number of users in the cohort (use with months since signup dimension)"
     type: number
@@ -134,6 +138,7 @@ view: cohort_size {
   }
 
   measure: average_spend_per_user {
+    label: "Average Spend per User"
     view_label: "Order Items"
     type: number
     value_format_name: usd
@@ -142,6 +147,7 @@ view: cohort_size {
   }
 
   measure: average_orders_per_user {
+    label: "Average Orders per User"
     view_label: "Order Items"
     type: number
     value_format_name: usd
@@ -164,6 +170,7 @@ view: cohort_size {
 ################################################################
 
   dimension: metric_name {
+    label: "Metric Name"
     hidden: yes
     type: string
     sql: CASE
@@ -176,6 +183,7 @@ view: cohort_size {
   }
 
   dimension: format_symbol {
+    label: "Format Symbol"
     hidden: yes
     sql:
         CASE
@@ -197,6 +205,7 @@ view: order_items_cohorts {
   extends: [order_items]
 
   dimension: months_since_signup {
+    label: "Months Since Signup"
     view_label: "Order Items"
     description: "Months an order occurred since the user first signed up"
     type: number

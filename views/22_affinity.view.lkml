@@ -1,4 +1,5 @@
 view: affinity {
+  label: "Affinity"
   derived_table: {
     datagroup_trigger: ecommerce_etl
     sql: SELECT
@@ -42,43 +43,51 @@ view: affinity {
   }
 
   measure: count {
+    label: "Count"
     type: count
     drill_fields: [detail*]
   }
 
   dimension: product_a_id {
+    label: "Product A ID"
     sql: ${TABLE}.product_a_id ;;
   }
 
   dimension: product_b_id {
+    label: "Product B ID"
     sql: ${TABLE}.product_b_id ;;
   }
 
   dimension: joint_user_freq {
+    label: "Joint User Frequency"
     description: "The number of users who have purchased both product a and product b"
     type: number
     sql: ${TABLE}.joint_user_freq ;;
   }
 
   dimension: joint_order_freq {
+    label: "Joint Order Frequency"
     description: "The number of orders that include both product a and product b"
     type: number
     sql: ${TABLE}.joint_order_freq ;;
   }
 
   dimension: product_a_freq {
+    label: "Product A Frequency"
     description: "The total number of times product a has been purchased"
     type: number
     sql: ${TABLE}.product_a_freq ;;
   }
 
   dimension: product_b_freq {
+    label: "Product B Frequency"
     description: "The total number of times product b has been purchased"
     type: number
     sql: ${TABLE}.product_b_freq ;;
   }
 
   dimension: user_affinity {
+    label: "User Affinity"
     hidden: yes
     type: number
     sql: 1.0*${joint_user_freq}/NULLIF((${product_a_freq}+${product_b_freq})-(${joint_user_freq}),0) ;;
@@ -86,6 +95,7 @@ view: affinity {
   }
 
   dimension: order_affinity {
+    label: "Order Affinity"
     hidden: yes
     type: number
     sql: 1.0*${joint_order_freq}/NULLIF((${product_a_freq}+${product_b_freq})-(${joint_order_freq}),0) ;;
@@ -109,6 +119,7 @@ view: affinity {
   }
 
   measure: combined_affinity {
+    label: "Combined Affinity"
     type: number
     sql: ${avg_user_affinity} + ${avg_order_affinity} ;;
   }
@@ -129,10 +140,10 @@ view: user_order_product {
         oi.user_id AS user_id
         , p.id AS prod_id
         , oi.order_id AS order_id
-      FROM ecomm.order_items oi
-      LEFT JOIN ecomm.inventory_items ii
+      FROM looker-private-demo.ecomm.order_items oi
+      LEFT JOIN looker-private-demo.ecomm.inventory_items ii
         ON oi.inventory_item_id = ii.id
-      LEFT JOIN ecomm. products p
+      LEFT JOIN looker-private-demo.ecomm. products p
         ON ii.product_id = p.id
       GROUP BY 1,2,3
        ;;
@@ -144,16 +155,19 @@ view: user_order_product {
 #   }
 
   dimension: user_id {
+    label: "User ID"
     type: number
     sql: ${TABLE}.user_id ;;
   }
 
   dimension: prod_id {
+    label: "Prod ID"
     type: number
     sql: ${TABLE}.prod_id ;;
   }
 
   dimension: order_id {
+    label: "Order ID"
     type: number
     sql: ${TABLE}.order_id ;;
   }
@@ -167,10 +181,10 @@ view: total_order_product {
     sql: SELECT
         p.id AS prod_id
         , COUNT(*) AS prod_freq
-      FROM ecomm.order_items oi
-      LEFT JOIN ecomm.inventory_items
+      FROM looker-private-demo.ecomm.order_items oi
+      LEFT JOIN looker-private-demo.ecomm.inventory_items
         ON oi.inventory_item_id = inventory_items.id
-      LEFT JOIN ecomm.products p
+      LEFT JOIN looker-private-demo.ecomm.products p
         ON inventory_items.product_id = p.id
       GROUP BY p.id
        ;;
@@ -182,10 +196,12 @@ view: total_order_product {
 #   }
 
   dimension: prod_id {
+    label: "Prod ID"
     sql: ${TABLE}.prod_id ;;
   }
 
   dimension: prod_freq {
+    label: "Prod Freq"
     type: number
     sql: ${TABLE}.prod_freq ;;
   }
