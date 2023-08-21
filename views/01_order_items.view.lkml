@@ -176,7 +176,7 @@ view: order_items {
 
   }
 
-  dimension: reporting_period {
+  dimension: reporting_period_ytd_vs_lytd {
     group_label: "Order Date"
     sql: CASE
         WHEN EXTRACT(YEAR from ${created_raw}) = EXTRACT(YEAR from CURRENT_TIMESTAMP())
@@ -265,7 +265,7 @@ view: order_items {
   measure: total_sale_price {
     type: sum
     value_format_name: usd
-    sql: ${sale_price} ;;
+    sql: ${sale_price} * 0.1 ;;
     drill_fields: [detail*]
   }
 
