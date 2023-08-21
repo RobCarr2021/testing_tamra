@@ -13,7 +13,7 @@ view: products {
   dimension: category {
     label: "Category"
     sql: TRIM(${TABLE}.category) ;;
-    drill_fields: [item_name]
+    drill_fields: [department, brand, item_name]
   }
 
   dimension: item_name {
@@ -25,6 +25,7 @@ view: products {
   dimension: brand {
     label: "Brand"
     sql: TRIM(${TABLE}.brand) ;;
+    drill_fields: [item_name]
     link: {
       label: "Website"
       url: "http://www.google.com/search?q={{ value | encode_uri }}+clothes&btnI"
@@ -38,7 +39,7 @@ view: products {
     link: {
       label: "{{value}} Analytics Dashboard"
       url: "/dashboards-next/CRMxoGiGJUv4eGALMHiAb0?Brand%20Name={{ value | encode_uri }}"
-      icon_url: "http://www.looker.com/favicon.ico"
+      icon_url: "https://www.seekpng.com/png/full/138-1386046_google-analytics-integration-analytics-icon-blue-png.png"
     }
 
     action: {
@@ -211,6 +212,23 @@ view: products {
     type: count_distinct
     sql: ${department} ;;
     drill_fields: [department, detail2*, -department_count] # don't show because it will always be 1
+  }
+
+  measure: prefered_categories {
+    hidden: yes
+    label: "Prefered Categories"
+    type: list
+    list_field: category
+    #order_by_field: order_items.count
+
+  }
+
+  measure: prefered_brands {
+    hidden: yes
+    label: "Prefered Brand"
+    type: list
+    list_field: brand
+    #order_by_field: count
   }
 
   set: detail {

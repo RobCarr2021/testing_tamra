@@ -1,5 +1,5 @@
 view: user_order_facts {
-  view_label: "User Order Factss"
+  view_label: "Users"
   derived_table: {
     sql:
     SELECT

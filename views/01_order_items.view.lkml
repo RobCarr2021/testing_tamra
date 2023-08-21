@@ -45,7 +45,7 @@ view: order_items {
     view_label: "Orders"
     type: count_distinct
     drill_fields: [detail*]
-    sql: ${order_id} ;;
+    sql: ${order_id};;
   }
 
   measure: first_purchase_count {
@@ -142,7 +142,7 @@ view: order_items {
       form_param: {
         name: "Price"
         type: string
-        default: "{{ order_items.sale_price._rendered_value }}"
+        default: "{{ sale_price._rendered_value }}"
       }
 
       form_param: {
@@ -223,7 +223,7 @@ view: order_items {
     label: "Days to Process"
     type: number
     sql: CASE
-        WHEN ${status} = 'Processing' THEN TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), ${created_raw}, DAY)*1.0 + 1
+        WHEN ${status} = 'Processing' THEN TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), ${created_raw}, DAY)*1.0
         WHEN ${status} IN ('Shipped', 'Complete', 'Returned') THEN TIMESTAMP_DIFF(${shipped_raw}, ${created_raw}, DAY)*1.0
         WHEN ${status} = 'Cancelled' THEN NULL
       END
@@ -258,7 +258,7 @@ view: order_items {
     label: "Sale Price"
     type: number
     value_format_name: usd
-    sql: ${TABLE}.sale_price ;;
+    sql: ${TABLE}.sale_prices;;
   }
 
   dimension: gross_margin {
@@ -374,6 +374,7 @@ view: order_items {
     type: number
     value_format_name: percent_2
     sql: 1.0 * ${returned_count} / nullif(${count},0) ;;
+    html: {{link}} ;;
   }
 
 

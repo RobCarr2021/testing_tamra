@@ -1,21 +1,16 @@
 - dashboard: web_analytics_overview
   title: Web Analytics Overview
   layout: newspaper
-  preferred_viewer: dashboards
+  preferred_viewer: dashboards-next
   query_timezone: user_timezone
+  preferred_slug: 2VgEQ4QWmU1qoZFiFsSd3K
   embed_style:
-    background_color: "#e8f1fa"
+    background_color: ''
     show_title: true
     title_color: "#131414"
     show_filters_bar: true
-    tile_text_color: gray
-    #tile_separator_color: rgba(0, 0, 0, 0.05)
-    #tile_border_radius: 3
-    #show_tile_shadow: true
-    # tile_separator_color: rgba(0, 0, 0, 0.05)
-    # tile_border_radius: 3
-    # show_tile_shadow: true
-    text_tile_text_color: ''
+    tile_text_color: "#070808"
+    text_tile_text_color: "#0d0d0c"
   elements:
   - title: Total Visitors
     name: Total Visitors
@@ -239,8 +234,8 @@
     col: 0
     width: 12
     height: 7
-  - title: App Overview
-    name: App Overview
+  - title: Most Popular Brands
+    name: Most Popular Brands
     model: thelook
     explore: events
     type: table

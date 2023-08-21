@@ -1,7 +1,8 @@
 - dashboard: customer_lookup
   title: Customer Lookup
   layout: newspaper
-  preferred_viewer: dashboards
+  description: ''
+  preferred_slug: MDDG8M9Lvb1S2zq5UuhUND
   embed_style:
     background_color: "#f6f8fa"
     show_title: true
@@ -16,25 +17,26 @@
     explore: order_items
     type: looker_single_record
     fields: [users.id, users.email, users.name, users.traffic_source, users.created_month,
-      users.age, users.gender, users.city, users.state, users.zip]
+      users.age, users.gender, users.city, users.state]
     filters:
       order_items.created_date: 99 years
       users.id: ''
-    sorts: [users.zip]
+    sorts: [users.created_month desc]
     limit: 1
     column_limit: 50
     query_timezone: America/Los_Angeles
-    show_null_labels: false
     show_view_names: false
+    show_null_labels: false
     show_row_numbers: true
     hidden_fields: []
     y_axes: []
+    defaults_version: 1
     listen:
       Email: users.email
     row: 0
     col: 0
     width: 7
-    height: 5
+    height: 6
   - title: Lifetime Orders
     name: Lifetime Orders
     model: thelook
@@ -52,10 +54,10 @@
     y_axes: []
     listen:
       Email: users.email
-    row: 7
+    row: 9
     col: 0
     width: 7
-    height: 2
+    height: 3
   - title: Total Items Returned
     name: Total Items Returned
     model: thelook
@@ -73,10 +75,10 @@
     y_axes: []
     listen:
       Email: users.email
-    row: 5
+    row: 6
     col: 0
     width: 7
-    height: 2
+    height: 3
   - title: Items Order History
     name: Items Order History
     model: thelook
@@ -91,10 +93,9 @@
     show_row_numbers: true
     hidden_fields: []
     y_axes: []
-    series_types: {}
     listen:
       Email: users.email
-    row: 9
+    row: 12
     col: 0
     width: 16
     height: 5
@@ -125,7 +126,7 @@
     defaults_version: 1
     listen:
       Email: users.email
-    row: 9
+    row: 12
     col: 16
     width: 8
     height: 5
@@ -134,9 +135,10 @@
     model: thelook
     explore: order_items
     type: looker_geo_coordinates
-    fields: [users.zip, users.count]
-    sorts: [users.created_month desc, users.zip]
+    fields: [users.count, users.location]
+    sorts: [users.created_month desc]
     limit: 1
+    column_limit: 50
     query_timezone: America/Los_Angeles
     map: usa
     map_projection: ''
@@ -169,17 +171,54 @@
     defaults_version: 1
     listen:
       Email: users.email
-    row: 0
+    row: 3
     col: 7
     width: 17
     height: 9
+  - title: Generate Promo Email
+    name: Generate Promo Email
+    model: thelook
+    explore: order_items
+    type: single_value
+    fields: [users.promo_email]
+    filters:
+      order_items.created_date: 99 years
+      users.id: ''
+    sorts: [users.promo_email]
+    limit: 1
+    column_limit: 50
+    query_timezone: America/Los_Angeles
+    custom_color_enabled: true
+    show_single_value_title: false
+    show_comparison: false
+    comparison_type: value
+    comparison_reverse_colors: false
+    show_comparison_label: true
+    enable_conditional_formatting: false
+    conditional_formatting_include_totals: false
+    conditional_formatting_include_nulls: false
+    show_view_names: false
+    show_null_labels: false
+    show_row_numbers: true
+    hidden_fields: []
+    y_axes: []
+    defaults_version: 1
+    listen:
+      Email: users.email
+    row: 0
+    col: 7
+    width: 17
+    height: 3
   filters:
   - name: Email
     title: Email
     type: field_filter
-    default_value: ''
+    default_value: aacevedo@yahoo.com
     allow_multiple_values: true
     required: false
+    ui_config:
+      type: advanced
+      display: popover
     model: thelook
     explore: order_items
     listens_to_filters: []
