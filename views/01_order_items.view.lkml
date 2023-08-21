@@ -287,7 +287,7 @@ view: order_items {
     label: "Total Sale Price"
     type: sum
     value_format_name: usd
-    sql: ${sale_price} * 0.1 ;;
+    sql: ${sale_price} ;;
     drill_fields: [detail*]
   }
 
