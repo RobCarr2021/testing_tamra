@@ -181,7 +181,7 @@ view: order_items {
     type: time
     timeframes: [time, hour, date, week, month, year, hour_of_day, day_of_week, month_num, raw, week_of_year,month_name]
     sql: ${TABLE}.created_at ;;
-    order_by_field: created_month
+    #order_by_field: created_month_num
   }
 
   dimension: reporting_period_ytd_vs_lytd {
