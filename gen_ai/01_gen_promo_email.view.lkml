@@ -1,5 +1,6 @@
 # If necessary, uncomment the line below to include explore_source.
 # include: "thelookai.model.lkml"
+
 view: customer_profile {
   derived_table: {
     datagroup_trigger: ecommerce_etl
@@ -12,17 +13,16 @@ view: customer_profile {
       column: days_as_customer { field: user_order_facts.days_as_customer }
       column: lifetime_orders { field: user_order_facts.lifetime_orders }
       column: lifetime_revenue { field: user_order_facts.lifetime_revenue }
-      column: latest_order_date { field: user_order_facts.latest_order_date }
       column: city { field: users.city }
       column: country { field: users.country }
-      column: prefered_categories { field: products.prefered_categories }
-      column: prefered_brands { field: products.prefered_brands }
-      derived_column: p_brands {
-        sql: replace(prefered_brands, "|RECORD|", ", ") ;;
-      }
-      derived_column: p_categories {
-        sql: replace(prefered_categories, "|RECORD|", ", ") ;;
-      }
+      #column: prefered_categories { field: products.prefered_categories }
+      #column: prefered_brands { field: products.prefered_brands }
+      ##derived_column: p_brands {
+      #  sql: replace(prefered_brands, "|RECORD|", ", ") ;;
+      #}
+      #derived_column: p_categories {
+      #  sql: replace(prefered_categories, "|RECORD|", ", ") ;;
+      #}
       filters: {
         field: users.id
         value: "NOT NULL"
@@ -53,27 +53,27 @@ view: customer_profile {
     value_format: "$#,##0.00"
     type: number
   }
-  dimension: latest_order_date {
-    label: "Users Facts Latest Orders"
-    description: ""
-    type: date
-  }
+  #dimension: latest_order_date {
+  #  label: "Users Facts Latest Orders"
+  #  description: ""
+  #  type: date
+  #}
   dimension: city {
     description: ""
   }
   dimension: country {
     description: ""
   }
-  dimension: prefered_categories {
-    description: ""
-    #type: number
-  }
-  dimension: prefered_brands {
-    description: ""
-    #type: number
-  }
-  dimension: p_brands {}
-  dimension: p_categories {}
+  #dimension: prefered_categories {
+  #  description: ""
+  #  #type: number
+  #}
+  #dimension: prefered_brands {
+  #  description: ""
+  #  #type: number
+  #}
+  #dimension: p_brands {}
+  #dimension: p_categories {}
 }
 
 
@@ -90,8 +90,7 @@ view: promo_email {
           MODEL  `looker-private-demo.ecomm.email_promotion`,
           (
             SELECT
-
-      format(CONCAT('Generate Promo Email (150 words) including details about the following customer profile : \nName : %s\nGender : %s\nAge :%d\nDays as customer: %d\nLifetime order : %d\nLifetime revenue : %f\nExpiry Date : %s\nCity : %s\nCountry : %s'),name, gender, age, days_as_customer, lifetime_orders, lifetime_revenue, cast(DATE_ADD(CURRENT_DATE, interval 3 month) as string),city, country)  AS prompt,
+      format(CONCAT('Generate a promo Email (150 words max, no subject, no signature) including details about the following customer profile : \nName : %s\nGender : %s\nAge :%d\nDays as customer: %d\nLifetime order : %d\nLifetime revenue : %f\nExpiry Date : %s\nCity : %s\nCountry : %s\n The conext the ecommerce clothing store'),ifnull(name,''), ifnull(gender,''), ifnull(age,0), ifnull(days_as_customer,0), ifnull(lifetime_orders,0), ifnull(lifetime_revenue,0), cast(DATE_ADD(CURRENT_DATE, interval 3 month) as string),ifnull(city,''), ifnull(country,''))  AS prompt,
       id
       FROM  ${customer_profile.SQL_TABLE_NAME}
       WHERE {% condition users.email %} email {% endcondition %}
