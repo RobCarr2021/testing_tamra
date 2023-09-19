@@ -31,12 +31,6 @@ view: order_items {
     drill_fields: [detail*]
   }
 
-  measure: ratio {
-    type: number
-    sql: ${total_sale_price}/nullif(${count},0) ;;
-    value_format_name: decimal_4
-  }
-
   measure: count_last_28d {
     label: "Count Sold in Trailing 28 Days"
     type: count_distinct
@@ -51,7 +45,7 @@ view: order_items {
     view_label: "Orders"
     type: count_distinct
     drill_fields: [detail*]
-    sql: ${order_id} ;;
+    sql: ${order_id};;
   }
 
   measure: first_purchase_count {
@@ -187,10 +181,10 @@ view: order_items {
     type: time
     timeframes: [time, hour, date, week, month, year, hour_of_day, day_of_week, month_num, raw, week_of_year,month_name]
     sql: ${TABLE}.created_at ;;
-
+    #order_by_field: created_month_num
   }
 
-  dimension: reporting_period {
+  dimension: reporting_period_ytd_vs_lytd {
     group_label: "Order Date"
     sql: CASE
         WHEN EXTRACT(YEAR from ${created_raw}) = EXTRACT(YEAR from CURRENT_TIMESTAMP())
@@ -264,7 +258,7 @@ view: order_items {
     label: "Sale Price"
     type: number
     value_format_name: usd
-    sql: ${TABLE}.sale_price ;;
+    sql: ${TABLE}.sale_price;;
   }
 
   dimension: gross_margin {

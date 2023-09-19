@@ -2,6 +2,7 @@ connection: "looker-private-demo"
 label: " eCommerce"
 include: "/queries/queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
+include: "/gen_ai/**/*.view" # include all the views
 include: "/dashboards/*.dashboard.lookml" # include all the views
 
 ############ Model Configuration #############
@@ -26,6 +27,12 @@ explore: order_items {
     sql_on: ${order_facts.order_id} = ${order_items.order_id} ;;
   }
 
+  join: promo_email {
+    type: left_outer
+    sql_on: ${promo_email.id} = ${users.id} ;;
+    relationship: one_to_one
+  }
+
   join: inventory_items {
     view_label: "Inventory Items"
     #Left Join only brings in items that have been sold as order_item
@@ -41,7 +48,7 @@ explore: order_items {
   }
 
   join: user_order_facts {
-    view_label: "Users Facts"
+    view_label: "Users"
     type: left_outer
     relationship: many_to_one
     sql_on: ${user_order_facts.user_id} = ${order_items.user_id} ;;
@@ -63,6 +70,7 @@ explore: order_items {
 
   join: discounts {
     view_label: "Discounts"
+    relationship: one_to_many
     type: inner
     sql_on: ${products.id} = ${discounts.product_id} ;;
   }
