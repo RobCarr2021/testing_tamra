@@ -48,6 +48,11 @@ view: order_items {
     sql: ${order_id};;
   }
 
+  measure: new_agg_final {
+    type: sum
+    sql: ${sale_price}/2*45 ;;
+  }
+
   measure: first_purchase_count {
     view_label: "Orders"
     type: count_distinct
