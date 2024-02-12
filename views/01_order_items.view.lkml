@@ -25,6 +25,16 @@ view: order_items {
     sql: ${TABLE}.user_id ;;
   }
 
+  dimension: random_new_field {
+    type: string
+    sql: ${TABLE}.random_new_field ;;
+  }
+
+  measure: new_measure {
+    type: sum
+    sql: ${sale_price}/8 ;;
+  }
+
   measure: count {
     label: "Count"
     type: count
