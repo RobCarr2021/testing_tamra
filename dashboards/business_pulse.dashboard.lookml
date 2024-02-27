@@ -743,9 +743,7 @@
     model: thelook
     explore: order_items
     type: single_value
-    fields: [order_items.reporting_period, order_items.count]
-    filters:
-      order_items.reporting_period: "-NULL"
+    fields: [order_items.count]
     sorts: [order_items.count desc]
     limit: 500
     column_limit: 50
@@ -782,7 +780,6 @@
     totals_color: "#808080"
     show_single_value_title: true
     single_value_title: Orders This Year
-    hidden_fields: [order_items.reporting_period]
     comparison_label: vs Same Period Last Year
     custom_color_enabled: false
     custom_color: forestgreen

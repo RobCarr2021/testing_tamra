@@ -2,6 +2,7 @@ connection: "looker-private-demo"
 label: " eCommerce"
 include: "/queries/queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
+include: "/gen_ai/**/*.view" # include all the views
 include: "/dashboards/*.dashboard.lookml" # include all the views
 
 ############ Model Configuration #############
@@ -14,6 +15,7 @@ datagroup: ecommerce_etl {
 persist_with: ecommerce_etl
 ############ Base Explores #############
 
+
 explore: order_items {
   label: "(1) Orders, Items and Users"
   view_name: order_items
@@ -23,6 +25,12 @@ explore: order_items {
     view_label: "Orders"
     relationship: many_to_one
     sql_on: ${order_facts.order_id} = ${order_items.order_id} ;;
+  }
+
+  join: promo_email {
+    type: left_outer
+    sql_on: ${promo_email.id} = ${users.id} ;;
+    relationship: one_to_one
   }
 
   join: inventory_items {
@@ -40,7 +48,7 @@ explore: order_items {
   }
 
   join: user_order_facts {
-    view_label: "Users Facts"
+    view_label: "Users"
     type: left_outer
     relationship: many_to_one
     sql_on: ${user_order_facts.user_id} = ${order_items.user_id} ;;
@@ -62,6 +70,7 @@ explore: order_items {
 
   join: discounts {
     view_label: "Discounts"
+    relationship: one_to_many
     type: inner
     sql_on: ${products.id} = ${discounts.product_id} ;;
   }
@@ -71,11 +80,6 @@ explore: order_items {
     type: left_outer
     sql_on: ${distribution_centers.id} = ${inventory_items.product_distribution_center_id} ;;
     relationship: many_to_one
-  }
-
-  access_filter: {
-    field: products.brand
-    user_attribute: brand
   }
   #roll up table for commonly used queries
   # aggregate_table: simple_rollup {
@@ -99,6 +103,7 @@ explore: order_items {
 
 explore: events {
   label: "(2) Web Event Data"
+  # sql_always_where: ${product_viewed.brand} in ({{ _user_attributes['brand'] }}) ;;
 
   join: sessions {
     view_label: "Sessions"
@@ -150,6 +155,7 @@ explore: events {
 
 explore: sessions {
   label: "(3) Web Session Data"
+  # sql_always_where: ${product_viewed.brand} in ({{ _user_attributes['brand'] }}) ;;
 
   join: events {
     view_label: "Events"
