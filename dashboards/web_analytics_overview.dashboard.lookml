@@ -1,15 +1,21 @@
 - dashboard: web_analytics_overview
-  title: Web Analytics
+  title: Web Analytics Overview
   layout: newspaper
+  preferred_viewer: dashboards
   query_timezone: user_timezone
-  description: 'Gives an overview of web analytics for a Ecommerce clothing store - metrics like views and conversion rates'
   embed_style:
-    background_color: 'Shows overview of analytics (things like visit volume and conversion rates) for a given ecommerce store'
+    background_color: "#e8f1fa"
     show_title: true
     title_color: "#131414"
     show_filters_bar: true
-    tile_text_color: "#070808"
-    text_tile_text_color: "#0d0d0c"
+    tile_text_color: gray
+    #tile_separator_color: rgba(0, 0, 0, 0.05)
+    #tile_border_radius: 3
+    #show_tile_shadow: true
+    # tile_separator_color: rgba(0, 0, 0, 0.05)
+    # tile_border_radius: 3
+    # show_tile_shadow: true
+    text_tile_text_color: ''
   elements:
   - title: Total Visitors
     name: Total Visitors
@@ -233,8 +239,8 @@
     col: 0
     width: 12
     height: 7
-  - title: Most Popular Brands
-    name: Most Popular Brands
+  - title: App Overview
+    name: App Overview
     model: thelook
     explore: events
     type: table
