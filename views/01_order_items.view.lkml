@@ -18,6 +18,23 @@ view: order_items {
     sql: ${TABLE}.inventory_item_id ;;
   }
 
+  parameter: custom_sql {
+    type: string
+  }
+
+  dimension: test_dim {
+    type: string
+    sql:
+    {%- if custom_sql._is_filtered -%}
+    "in query"
+    {%- else -%}
+    "not in query"
+    {%- endif -%}
+        ;;
+  }
+
+
+
   dimension: user_id {
     label: "User Id"
     type: number
@@ -78,6 +95,16 @@ view: order_items {
     label: "Order ID No Actions"
     type: number
     hidden: yes
+    sql: ${TABLE}.order_id ;;
+  }
+
+  dimension: ORDER_ID {
+    type:  string
+    sql: ${TABLE}.order_id ;;
+  }
+
+  dimension: Order_Id {
+    type: string
     sql: ${TABLE}.order_id ;;
   }
 
@@ -194,8 +221,9 @@ view: order_items {
 
   dimension_group: created {
     type: time
-    timeframes: [time, hour, date, week, month, year, hour_of_day, day_of_week, month_num, raw, week_of_year,month_name]
+    timeframes: [time, hour, date, week, month, year, hour_of_day, day_of_week, day_of_year, month_num, raw, week_of_year,month_name]
     sql: ${TABLE}.created_at ;;
+    convert_tz: no
     #order_by_field: created_month_num
   }
 
@@ -213,6 +241,19 @@ view: order_items {
       END
        ;;
   }
+
+  dimension_group: current_date {
+    type: time
+    hidden: yes
+    timeframes: [raw,day_of_year]
+    sql: CURRENT_TIMESTAMP() ;;
+  }
+
+  dimension: is_ytd {
+    type: yesno
+    sql: ${created_day_of_year} < ${current_date_day_of_year}  ;;
+  }
+
 
   dimension: days_since_sold {
     label: "Days Since Sold"
@@ -298,13 +339,19 @@ view: order_items {
     style: interval
   }
 
+  measure: dummy {
+    type: number
+    sql: 1=1 ;;
+    drill_fields: [created_year,total_sale_price, created_week_of_year]
+  }
+
   measure: total_sale_price {
     label: "Total Sale Price"
     type: sum
     value_format_name: usd
     sql: ${sale_price} ;;
     drill_fields: [detail*]
-  }
+   }
 
   measure: total_gross_margin {
     label: "Total Gross Margin"

@@ -69,10 +69,14 @@ view: users {
     label: "Email"
     sql: ${TABLE}.email ;;
     tags: ["email"]
+    link: {
+      label: "test"
+      url: "mailto:alchristiansen@google.com"
+    }
 
     link: {
       label: "User Lookup Dashboard"
-      url: "/dashboards/8475?Email={{ value | encode_uri }}"
+      url: "/dashboards/8475?Email={{ order_items.order_id._value | encode_uri }}"
       icon_url: "https://cdn.icon-icons.com/icons2/2248/PNG/512/monitor_dashboard_icon_136391.png"
     }
     action: {
@@ -254,6 +258,7 @@ view: users {
   }
 
   dimension: ssn {
+    required_access_grants: [can_see_pii]
     label: "SSN"
     # dummy field used in next dim, generate 4 random numbers to be the last 4 digits
     hidden: yes

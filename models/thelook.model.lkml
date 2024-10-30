@@ -1,4 +1,9 @@
 connection: "looker-private-demo"
+# connection: "@{connection}"
+
+
+# include: "/connection_1.lkml"
+# include: "/{{ _user_attributes['connection_name'] }}.lkml"
 label: " eCommerce"
 include: "/queries/queries*.view" # includes all queries refinements
 include: "/views/**/*.view" # include all the views
@@ -14,13 +19,24 @@ datagroup: ecommerce_etl {
 
 persist_with: ecommerce_etl
 ############ Base Explores #############
-
-
+access_grant: can_see_pii {
+  user_attribute: can_see_sensitive_data
+  allowed_values: ["yes"]
+}
+explore: std_dev {}
 explore: order_items {
+
   label: "(1) Orders, Items and Users"
   view_name: order_items
+  # access_filter: {
+  #   field: products.brand
+  #   user_attribute: company_name
+  # }
+
+
 
   join: order_facts {
+
     type: left_outer
     view_label: "Orders"
     relationship: many_to_one
@@ -41,6 +57,7 @@ explore: order_items {
     sql_on: ${inventory_items.id} = ${order_items.inventory_item_id} ;;
   }
   join: users {
+    required_access_grants: [can_see_pii]
     view_label: "Users"
     type: left_outer
     relationship: many_to_one
