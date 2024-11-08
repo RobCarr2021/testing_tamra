@@ -321,7 +321,7 @@ view: order_items {
     label: "Gross Margin"
     type: number
     value_format_name: usd
-    sql: ${sale_price} - ${inventory_items.cost};;
+    sql: ${sale_price} * .5 - ${inventory_items.cost};;
   }
 
   dimension: item_gross_margin_percentage {
@@ -352,6 +352,11 @@ view: order_items {
     sql: ${sale_price} ;;
     drill_fields: [detail*]
    }
+
+  measure: perc_of_total {
+    type: percent_of_total
+    sql: ${total_sale_price} ;;
+  }
 
   measure: total_gross_margin {
     label: "Total Gross Margin"
