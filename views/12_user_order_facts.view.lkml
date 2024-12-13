@@ -13,6 +13,7 @@ view: user_order_facts {
       FROM looker-private-demo.ecomm.order_items
       GROUP BY user_id
     ;;
+    # persist_for: "4 hours"
     datagroup_trigger: ecommerce_etl
   }
 
