@@ -19,6 +19,11 @@ view: users {
 
   }
 
+  parameter: state_choice {
+    type: string
+    default_value: "California"
+  }
+
   dimension: last_name {
     label: "Last Name"
     hidden: yes
