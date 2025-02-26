@@ -11,6 +11,11 @@ view: order_items {
     value_format: "00000"
   }
 
+  parameter: state_choice {
+    type: string
+    default_value: "California"
+  }
+
   dimension: inventory_item_id {
     label: "Inventory Item ID"
     type: number
