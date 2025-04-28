@@ -39,7 +39,7 @@ explore: json_data {
     relationship: one_to_many
   }
   join: former_locations {
-    view_label: "Location"
+    view_label: "Former Locations"
     sql: LEFT JOIN UNNEST(JSON_EXTRACT_ARRAY(${json_data.former_locations})) as former_locations ;;
     relationship: one_to_many
   }
