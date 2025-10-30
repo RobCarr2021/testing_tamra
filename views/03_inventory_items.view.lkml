@@ -17,6 +17,13 @@ view: inventory_items {
     sql: ${TABLE}.cost ;;
   }
 
+  dimension: cost_duplicate {
+    label: "Cost Duplicate"
+    type: number
+    value_format_name: usd
+    sql: ${TABLE}.cost ;;
+  }
+
   dimension_group: created {
     label: "Created"
     type: time
