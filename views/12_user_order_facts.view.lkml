@@ -1,3 +1,4 @@
+#test
 view: user_order_facts {
   view_label: "Users"
   derived_table: {
